@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.Applicaion", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.Infrastructure", "AgileControl.Infrastructure\AgileControl.Infrastructure.csproj", "{DB2C0E32-54A2-447F-A1F5-A09E0A57AEA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.Shared", "AgileControl.Shared\AgileControl.Shared.csproj", "{E4B7F392-B636-4FC8-A212-59588D7CCE09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{DB2C0E32-54A2-447F-A1F5-A09E0A57AEA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB2C0E32-54A2-447F-A1F5-A09E0A57AEA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB2C0E32-54A2-447F-A1F5-A09E0A57AEA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4B7F392-B636-4FC8-A212-59588D7CCE09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4B7F392-B636-4FC8-A212-59588D7CCE09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4B7F392-B636-4FC8-A212-59588D7CCE09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4B7F392-B636-4FC8-A212-59588D7CCE09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
