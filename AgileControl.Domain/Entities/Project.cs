@@ -14,5 +14,5 @@ public class Project
 
     public ICollection<Task> Tasks { get; set; } = new List<Task>();
 
-    public ICollection<ProgectMember> ProgectMembers { get; set; } = new List<ProgectMember>();
+    public ICollection<ProjectMember> ProgectMembers { get; set; } = new List<ProjectMember>();
 }

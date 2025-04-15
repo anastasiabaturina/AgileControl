@@ -2,7 +2,7 @@
 
 namespace AgileControl.Domain.Entities;
 
-public class ProgectMember
+public class ProjectMember
 {
     public Guid UserId { get; set; }
 

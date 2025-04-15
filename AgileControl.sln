@@ -3,15 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.API", "AgileControl.API\AgileControl.API.csproj", "{423A7C25-613D-48FF-A9B6-1019D3DB1511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileControl.API", "AgileControl.API\AgileControl.API.csproj", "{423A7C25-613D-48FF-A9B6-1019D3DB1511}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D7445204-9AF9-44E5-99F7-1E6381DCA1B9} = {D7445204-9AF9-44E5-99F7-1E6381DCA1B9}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.Domain", "AgileControl.Domain\AgileControl.Domain.csproj", "{555FE452-187A-45D6-B20D-B7D5B9D17860}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileControl.Domain", "AgileControl.Domain\AgileControl.Domain.csproj", "{555FE452-187A-45D6-B20D-B7D5B9D17860}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.Applicaion", "AgileControl.Applicaion\AgileControl.Applicaion.csproj", "{D7445204-9AF9-44E5-99F7-1E6381DCA1B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileControl.Applicaion", "AgileControl.Applicaion\AgileControl.Applicaion.csproj", "{D7445204-9AF9-44E5-99F7-1E6381DCA1B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.Infrastructure", "AgileControl.Infrastructure\AgileControl.Infrastructure.csproj", "{DB2C0E32-54A2-447F-A1F5-A09E0A57AEA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileControl.Infrastructure", "AgileControl.Infrastructure\AgileControl.Infrastructure.csproj", "{DB2C0E32-54A2-447F-A1F5-A09E0A57AEA9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{555FE452-187A-45D6-B20D-B7D5B9D17860} = {555FE452-187A-45D6-B20D-B7D5B9D17860}
+		{D7445204-9AF9-44E5-99F7-1E6381DCA1B9} = {D7445204-9AF9-44E5-99F7-1E6381DCA1B9}
+		{E4B7F392-B636-4FC8-A212-59588D7CCE09} = {E4B7F392-B636-4FC8-A212-59588D7CCE09}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.Shared", "AgileControl.Shared\AgileControl.Shared.csproj", "{E4B7F392-B636-4FC8-A212-59588D7CCE09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileControl.Shared", "AgileControl.Shared\AgileControl.Shared.csproj", "{E4B7F392-B636-4FC8-A212-59588D7CCE09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

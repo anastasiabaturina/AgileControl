@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\Context\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Configuration\" />
+  </ItemGroup>
+
 </Project>

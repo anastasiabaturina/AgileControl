@@ -10,5 +10,5 @@ public class User
 
     public string Avatar { get; set; } = default!;
 
-    public ICollection<ProgectMember> ProgectMembers { get; set; } = new List<ProgectMember>();
+    public ICollection<ProjectMember> ProgectMembers { get; set; } = new List<ProjectMember>();
 }
