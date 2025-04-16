@@ -1,0 +1,18 @@
+services:
+
+  # agilecontrol.api:
+  #   image: ${DOCKER_REGISTRY-}agilecontrolapi
+  #   build:
+  #     context: .
+  #     dockerfile: AgileControl.API/Dockerfile
+
+  postgres:
+   image: postgres:16.1
+   environment:
+      POSTGRES_DB: "7814"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "mypassword"
+   ports:
+     - "7814:5432"
+   volumes:
+      - postgres_data:/var/lib/postgresql/data

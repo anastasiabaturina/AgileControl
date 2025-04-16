@@ -2,8 +2,9 @@
 
 public enum ProjectRole
 {
-    Owner,
-    Manager,
-    Contributor,
-    Viewer
+    Owner,          // Создатель проекта, полный доступ
+    ScrumMaster,    // Организатор процессов, следит за методологией
+    ProductOwner,   // Представляет интересы заказчика, формирует backlog
+    Developer,      // Участник разработки
+    Guest
 }

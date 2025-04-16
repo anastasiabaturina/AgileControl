@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\Context\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Configuration\" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AgileControl.Applicaion\AgileControl.Applicaion.csproj" />
+    <ProjectReference Include="..\AgileControl.Shared\AgileControl.Shared.csproj" />
   </ItemGroup>
 
 </Project>

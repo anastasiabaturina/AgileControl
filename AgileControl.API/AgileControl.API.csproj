@@ -6,10 +6,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>f140e05e-d3f3-4fc1-adff-35d445af9001</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Requests\" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AgileControl.Applicaion\AgileControl.Applicaion.csproj" />
+    <ProjectReference Include="..\AgileControl.Domain\AgileControl.Domain.csproj" />
+    <ProjectReference Include="..\AgileControl.Infrastructure\AgileControl.Infrastructure.csproj" />
+    <ProjectReference Include="..\AgileControl.Shared\AgileControl.Shared.csproj" />
   </ItemGroup>
 
 </Project>

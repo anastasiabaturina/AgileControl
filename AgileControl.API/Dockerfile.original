@@ -13,10 +13,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["AgileControl.API/AgileControl.API.csproj", "AgileControl.API/"]
-COPY ["AgileControl.Applicaion/AgileControl.Applicaion.csproj", "AgileControl.Applicaion/"]
-COPY ["AgileControl.Domain/AgileControl.Domain.csproj", "AgileControl.Domain/"]
-COPY ["AgileControl.Shared/AgileControl.Shared.csproj", "AgileControl.Shared/"]
-COPY ["AgileControl.Infrastructure/AgileControl.Infrastructure.csproj", "AgileControl.Infrastructure/"]
 RUN dotnet restore "./AgileControl.API/AgileControl.API.csproj"
 COPY . .
 WORKDIR "/src/AgileControl.API"

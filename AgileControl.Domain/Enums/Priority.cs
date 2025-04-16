@@ -5,5 +5,5 @@ public enum Priority
     No,
     Low,
     Average,
-    High
+    High,
 }
