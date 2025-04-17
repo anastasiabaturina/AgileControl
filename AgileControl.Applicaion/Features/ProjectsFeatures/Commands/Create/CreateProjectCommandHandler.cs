@@ -21,7 +21,7 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
 
         var project = _mapper.Map<Project>(command);
 
-        _context.Set<Project>().Add(project);
+        _context.Projects.Add(project);
 
         await _context.SaveChangesAsync(cancellationToken);
 
