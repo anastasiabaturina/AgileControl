@@ -1,4 +1,5 @@
 ﻿using AgileControl.Domain.Enums;
+using System.Text.Json.Serialization;
 
 namespace AgileControl.Domain.Entities;
 
@@ -6,7 +7,7 @@ public class ProjectTask
 {
     public Guid Id { get; set; }
 
-    public string Titie { get; set; } = default!;
+    public string Title { get; set; } = default!;
 
     public string? Description { get; set; }
 
@@ -14,12 +15,13 @@ public class ProjectTask
 
     public int? StoryPoint { get; set; }
 
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
     public Guid IdUserCreated { get; set; }
 
-    public User UserCrested { get; set; } = default!;
+    public User UserCreated { get; set; } = default!;
 
+    [JsonIgnore]
     public ICollection<User>? ResponsebleUsers { get; set; }
 
     public Project Project { get; set; }

@@ -10,7 +10,7 @@ public class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
     {
         builder.HasKey(t => t.Id);
 
-        builder.Property(t => t.Titie)
+        builder.Property(t => t.Title)
             .IsRequired()
             .HasMaxLength(255);
 
@@ -30,14 +30,28 @@ public class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
             .IsRequired(false)
             .HasDefaultValue(0);
 
-        builder.HasOne(t => t.UserCrested)
+        builder.HasOne(t => t.UserCreated)
             .WithMany(u => u.CreatedTasks)
-            .HasForeignKey(t => t.IdUserCreated)
-            .OnDelete(DeleteBehavior.SetNull);
+            .HasForeignKey(t => t.IdUserCreated);
 
         builder.HasMany(t => t.ResponsebleUsers)
-            .WithMany()
-            .UsingEntity(j => j.ToTable("TaskUsers"));
+            .WithMany(u => u.AssignedTasks)
+            .UsingEntity<Dictionary<string, object>>(
+                "TaskUsers",
+                j => j
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                j => j
+                    .HasOne<ProjectTask>()
+                    .WithMany()
+                    .HasForeignKey("ProjectTaskId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                j =>
+                {
+                    j.HasKey("UserId", "ProjectTaskId");
+                });
 
         builder.HasOne(t => t.Project)
             .WithMany(p => p.Tasks)

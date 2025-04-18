@@ -1,4 +1,6 @@
-﻿namespace AgileControl.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace AgileControl.Domain.Entities;
 
 public class Project
 {
@@ -16,9 +18,12 @@ public class Project
 
     public DateTime? EndDate { get; set; }
 
+    [JsonIgnore]
     public ICollection<ProjectTask>? Tasks { get; set; }
 
+    [JsonIgnore]
     public ICollection<ProjectMember>? ProgectMembers { get; set; }
 
+    [JsonIgnore]
     public ICollection<Sprint>? Sprints { get; set; }
 }

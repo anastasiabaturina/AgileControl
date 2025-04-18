@@ -24,7 +24,7 @@ services:
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
     ports:
-      - "5432:5432"
+      - "7853:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

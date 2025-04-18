@@ -1,4 +1,6 @@
-﻿namespace AgileControl.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace AgileControl.Domain.Entities;
 
 public class Sprint
 {
@@ -10,9 +12,10 @@ public class Sprint
 
     public Project Project { get; set; } = default!;
 
-    public DateTime StartDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
+    [JsonIgnore]
     public ICollection<ProjectTask>? Tasks { get; set; }
 }

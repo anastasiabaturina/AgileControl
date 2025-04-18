@@ -11,7 +11,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Title)
-            .IsRequired() 
+            .IsRequired()
             .HasMaxLength(255);
 
         builder.Property(p => p.Description)
@@ -24,7 +24,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.HasMany(p => p.Tasks)
             .WithOne()
-            .HasForeignKey(pt => pt.ProjectId); 
+            .HasForeignKey(pt => pt.ProjectId);
 
         builder.HasMany(p => p.ProgectMembers)
             .WithOne(pm => pm.Project)
@@ -35,11 +35,11 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .HasForeignKey(s => s.ProjectId);
 
         builder.Property(p => p.CreatedDate)
-            .IsRequired() 
-            .HasDefaultValueSql("CURRENT_TIMESTAMP"); 
+            .IsRequired()
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.Property(p => p.EndDate)
-            .IsRequired(false)  
+            .IsRequired(false)
             .HasDefaultValue(null);
     }
 }

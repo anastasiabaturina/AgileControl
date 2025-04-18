@@ -2,6 +2,7 @@
 using AgileControl.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace AgileControl.Infrastructure.Context;
 
@@ -24,4 +25,12 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>, IApplic
     public DbSet<ProjectTask> ProjectTasks { get; set; } 
 
     public DbSet<Sprint> Sprints { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+    }
 }
