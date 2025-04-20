@@ -1,9 +1,12 @@
 ﻿using AgileControl.API.Middlewaries;
 using AgileControl.Domain.Entities;
 using AgileControl.Infrastructure.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace AgileControl.API;
 
@@ -43,6 +46,21 @@ public class Startup
             });
 
         });
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+       .AddJwtBearer(options =>
+       {
+           options.TokenValidationParameters = new TokenValidationParameters
+           {
+               ValidateIssuer = true,
+               ValidateAudience = true,
+               ValidateLifetime = true,
+               ValidateIssuerSigningKey = true,
+               ValidIssuer = Configuration["JwtIssuer"],
+               ValidAudience = Configuration["JwtAudience"],
+               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
+           };
+       });
     }
 
     public void Configure(IApplicationBuilder app)
@@ -54,6 +72,10 @@ public class Startup
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {

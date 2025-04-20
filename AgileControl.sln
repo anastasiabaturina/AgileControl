@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileControl.Shared", "Agil
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF1CC097-3DB9-42D2-8170-D1C12DE35C73}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileControl.BlazorUI", "..\AgileControl.BlazorUI\AgileControl.BlazorUI.csproj", "{3CBECD9D-A29D-41BF-8443-ED9C851654A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{AF1CC097-3DB9-42D2-8170-D1C12DE35C73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF1CC097-3DB9-42D2-8170-D1C12DE35C73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF1CC097-3DB9-42D2-8170-D1C12DE35C73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CBECD9D-A29D-41BF-8443-ED9C851654A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CBECD9D-A29D-41BF-8443-ED9C851654A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CBECD9D-A29D-41BF-8443-ED9C851654A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CBECD9D-A29D-41BF-8443-ED9C851654A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
