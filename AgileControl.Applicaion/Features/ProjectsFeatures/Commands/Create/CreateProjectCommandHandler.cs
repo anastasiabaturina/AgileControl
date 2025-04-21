@@ -1,5 +1,5 @@
-﻿using AgileControl.Applicaion.Interfaces;
-using AgileControl.Domain.Entities;
+﻿using AgileControl.Domain.Entities;
+using AgileControl.Infrastructure.Context;
 using AutoMapper;
 using MediatR;
 
@@ -7,10 +7,10 @@ namespace AgileControl.Applicaion.Features.ProjectsFeatures.Commands.Create;
 
 public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, CreateProjectCommandResponse>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public CreateProjectCommandHandler(IApplicationDbContext context, IMapper mapper)
+    public CreateProjectCommandHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

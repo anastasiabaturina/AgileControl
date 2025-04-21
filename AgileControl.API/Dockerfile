@@ -9,7 +9,7 @@ EXPOSE 8081
 
 
 # Этот этап используется для сборки проекта службы
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-preview AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["AgileControl.API/AgileControl.API.csproj", "AgileControl.API/"]

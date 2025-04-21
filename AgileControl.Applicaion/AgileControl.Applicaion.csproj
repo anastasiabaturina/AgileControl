@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AgileControl.Domain\AgileControl.Domain.csproj" />
+    <ProjectReference Include="..\AgileControl.Infrastructure\AgileControl.Infrastructure.csproj" />
     <ProjectReference Include="..\AgileControl.Shared\AgileControl.Shared.csproj" />
   </ItemGroup>
 

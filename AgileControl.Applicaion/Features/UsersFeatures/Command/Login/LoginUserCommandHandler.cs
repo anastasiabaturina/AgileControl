@@ -1,6 +1,5 @@
 ﻿using AgileControl.API.Models.Exceptions;
 using AgileControl.Domain.Entities;
-using Humanizer.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -9,33 +8,32 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
+namespace AgileControl.Applicaion.Features.UsersFeatures.Command.Login;
 
-public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, RegisterUserCommandResponse>
+public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginUserResponse>
 {
     private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;
 
-    public RegisterUserCommandHandler(UserManager<User> userManager, IConfiguration configuration)
+    public LoginUserCommandHandler(UserManager<User> userManager, IConfiguration configuration)
     {
         _userManager = userManager;
         _configuration = configuration;
     }
 
-    public async Task<RegisterUserCommandResponse> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
+    public async Task<LoginUserResponse> Handle(LoginUserCommand command, CancellationToken cancellationToken)
     {
-        var userExist = await _userManager.FindByEmailAsync(command.Email);
+        var user = await _userManager.FindByNameAsync(command.Email);
 
-        if (userExist != null)
+        if (user == null)
         {
-            throw new BadRequestException("Пользователь с таким e-mail уже существует");
+            throw new BadRequestException("Пользователя с таким e-mail не существует");
         }
 
-        var user = new User
+        if (!await _userManager.CheckPasswordAsync(user, command.Password))
         {
-            UserName = command.UserName,
-            Email = command.Email,
-        };
+            throw new BadRequestException("Неверный пароль");
+        }
 
         var claims = new[]
         {
@@ -65,7 +63,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
             throw new BadRequestException(result.Errors.First().Description);
         }
 
-        return new RegisterUserCommandResponse
+        return new LoginUserResponse
         {
             Token = tokenResponse
         };
