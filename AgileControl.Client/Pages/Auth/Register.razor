@@ -1,0 +1,68 @@
+﻿@page "/register"
+@using AgileControl.Client.Interfaces
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavigationManager
+@inject MudBlazor.ISnackbar Snackbar
+
+<MudPaper Class="pa-4" Elevation="3">
+    <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">
+        Регистрация
+    </MudText>
+
+    <MudForm @ref="form" Model="registerModel" OnValidSubmit="HandleRegistration">
+        <MudTextField @bind-Value="registerModel.Email" Label="Email" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="registerModel.UserName" Label="Имя пользователя" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="registerModel.Password" Label="Пароль" Type="password" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="registerModel.ConfirmPassword" Label="Подтверждение пароля" Type="password" Variant="Variant.Filled" Required="true" />
+
+        <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
+            Зарегистрироваться
+        </MudButton>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private RegisterModel registerModel = new RegisterModel();
+    private MudForm form;
+
+    // Модель для регистрации
+    public class RegisterModel
+    {
+        public string Email { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
+    }
+
+    private async Task HandleRegistration()
+    {
+        // Проверка совпадения паролей
+        if (registerModel.Password != registerModel.ConfirmPassword)
+        {
+            Snackbar.Add("Пароли не совпадают.", MudBlazor.Severity.Error);
+            return;
+        }
+
+        try
+        {
+            // Вызов метода RegisterAsync из AuthenticationService
+            var token = await AuthService.RegisterAsync(registerModel.Email, registerModel.UserName, registerModel.Password);
+
+            // Проверка успешной регистрации
+            if (!string.IsNullOrEmpty(token))
+            {
+                Snackbar.Add("Регистрация успешна!", MudBlazor.Severity.Success);
+                NavigationManager.NavigateTo("/login");
+            }
+            else
+            {
+                Snackbar.Add("Не удалось зарегистрировать пользователя.", MudBlazor.Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Обработка ошибок
+            Snackbar.Add($"Ошибка: {ex.Message}", MudBlazor.Severity.Error);
+        }
+    }
+}

@@ -1,0 +1,28 @@
+﻿@page "/login"
+@using AgileControl.Client.Interfaces
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+
+<MudTextField @bind-Value="email" Label="Email" Variant="Variant.Filled" />
+<MudTextField @bind-Value="password" Label="Password" Type="password" Variant="Variant.Filled" />
+<MudButton OnClick="LoginHandler" Variant="Variant.Filled" Color="Color.Primary">Login</MudButton>
+
+@code {
+    private string email;
+    private string password;
+
+    private async Task LoginHandler()
+    {
+        var token = await AuthenticationService.LoginAsync(email, password);
+        if (!string.IsNullOrEmpty(token))
+        {
+            // Успешная аутентификация
+            NavigationManager.NavigateTo("/home");
+        }
+        else
+        {
+            // Ошибка при аутентификации
+            // Показать ошибку
+        }
+    }
+}

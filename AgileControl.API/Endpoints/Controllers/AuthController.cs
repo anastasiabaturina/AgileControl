@@ -3,8 +3,6 @@ using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Login;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
 using AgileControl.Applicaion.Models.Requests;
-using AgileControl.Applicaion.Models.Responses;
-using AgileControl.Domain.Entities;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

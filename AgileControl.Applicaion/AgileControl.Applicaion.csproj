@@ -7,15 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configuration\" />
-    <Folder Include="Extensions\" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Features\ProjectsFeatures\Queries\" />
     <Folder Include="Features\SprintFeatures\Commands\" />
     <Folder Include="Features\SprintFeatures\Queries\" />
     <Folder Include="Features\TasksFeatures\Commands\" />
     <Folder Include="Features\TasksFeatures\Queries\" />
     <Folder Include="Features\UsersFeatures\Queries\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

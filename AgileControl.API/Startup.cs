@@ -22,6 +22,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddRazorPages();
+
         services.AddControllers();
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
@@ -34,8 +36,6 @@ public class Startup
                 b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
                 .EnableSensitiveDataLogging()
                 .LogTo(Console.WriteLine, LogLevel.Information));
-    
-        //services.AddScoped<ApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
         services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -70,7 +70,7 @@ public class Startup
         });
     }
 
-    public void Configure(IApplicationBuilder app)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -80,7 +80,15 @@ public class Startup
 
         app.UseMiddleware<ExceptionHandingMiddleware>();
 
+        if(env.IsDevelopment())
+        {
+            app.UseWebAssemblyDebugging();
+        }
+
         app.UseHttpsRedirection();
+        app.UseBlazorFrameworkFiles();
+
+        app.UseStaticFiles();
 
         app.UseRouting();
 
@@ -89,7 +97,9 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapRazorPages();
             endpoints.MapControllers();
+            endpoints.MapFallbackToFile("index.html");
         });
     }
 }
