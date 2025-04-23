@@ -1,27 +1,6 @@
 ﻿@page "/home"
-@inject NavigationManager NavigationManager
-
-<MudPaper Class="pa-4" Elevation="3">
-    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
-        Добро пожаловать на главную страницу!
-    </MudText>
-
-    <MudText Typo="Typo.body1" Align="Align.Center" GutterBottom="true">
-        Это ваша домашняя страница. Здесь будет содержаться вся важная информация и доступ к функционалу приложения.
-    </MudText>
-
-    <MudPaper Class="pa-4" Style="@($"color:{Colors.Purple.Accent3};")">
-        Colors.Purple.Accent3
-    </MudPaper>
-
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="NavigateToDashboard">
-        Перейти в Dashboard
-    </MudButton>
-</MudPaper>
+<h3>Home</h3>
 
 @code {
-    private void NavigateToDashboard()
-    {
-        NavigationManager.NavigateTo("/dashboard");
-    }
+
 }

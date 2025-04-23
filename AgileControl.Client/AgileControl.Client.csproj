@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AgileControl.Applicaion\AgileControl.Applicaion.csproj" />
     <ProjectReference Include="..\AgileControl.Shared\AgileControl.Shared.csproj" />
   </ItemGroup>
 

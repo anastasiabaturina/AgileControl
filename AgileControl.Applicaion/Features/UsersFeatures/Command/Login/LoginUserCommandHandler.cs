@@ -56,13 +56,6 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginUs
 
         var tokenResponse = new JwtSecurityTokenHandler().WriteToken(token);
 
-        var result = await _userManager.CreateAsync(user, command.Password);
-
-        if (result.Errors.Any())
-        {
-            throw new BadRequestException(result.Errors.First().Description);
-        }
-
         return new LoginUserResponse
         {
             Token = tokenResponse

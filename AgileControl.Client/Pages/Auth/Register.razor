@@ -1,6 +1,6 @@
 ﻿@page "/register"
 @using AgileControl.Client.Interfaces
-@inject IAuthenticationService AuthService
+@inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject MudBlazor.ISnackbar Snackbar
 
@@ -9,35 +9,31 @@
         Регистрация
     </MudText>
 
-    <MudForm @ref="form" Model="registerModel" OnValidSubmit="HandleRegistration">
-        <MudTextField @bind-Value="registerModel.Email" Label="Email" Variant="Variant.Filled" Required="true" />
-        <MudTextField @bind-Value="registerModel.UserName" Label="Имя пользователя" Variant="Variant.Filled" Required="true" />
-        <MudTextField @bind-Value="registerModel.Password" Label="Пароль" Type="password" Variant="Variant.Filled" Required="true" />
-        <MudTextField @bind-Value="registerModel.ConfirmPassword" Label="Подтверждение пароля" Type="password" Variant="Variant.Filled" Required="true" />
+    <MudForm @ref="form" OnValidSubmit="HandleRegistration">
+        <MudTextField @bind-Value="Email" Label="Email" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="UserName" Label="Имя пользователя" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="Password" Label="Пароль" Type="password" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="ConfirmPassword" Label="Подтверждение пароля" Type="password" Variant="Variant.Filled" Required="true" />
 
-        <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
+        <MudButton OnClick="HandleRegistration" Type="Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
             Зарегистрироваться
         </MudButton>
     </MudForm>
 </MudPaper>
 
 @code {
-    private RegisterModel registerModel = new RegisterModel();
     private MudForm form;
 
-    // Модель для регистрации
-    public class RegisterModel
-    {
-        public string Email { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
-    }
+    public string Email { get; set; }
+    public string UserName { get; set; }
+    public string Password { get; set; }
+    public string ConfirmPassword { get; set; }
+
 
     private async Task HandleRegistration()
     {
         // Проверка совпадения паролей
-        if (registerModel.Password != registerModel.ConfirmPassword)
+        if (Password != ConfirmPassword)
         {
             Snackbar.Add("Пароли не совпадают.", MudBlazor.Severity.Error);
             return;
@@ -46,13 +42,13 @@
         try
         {
             // Вызов метода RegisterAsync из AuthenticationService
-            var token = await AuthService.RegisterAsync(registerModel.Email, registerModel.UserName, registerModel.Password);
+            var token = await AuthenticationService.RegisterAsync(Email, UserName,  Password);
 
             // Проверка успешной регистрации
             if (!string.IsNullOrEmpty(token))
             {
                 Snackbar.Add("Регистрация успешна!", MudBlazor.Severity.Success);
-                NavigationManager.NavigateTo("/login");
+                NavigationManager.NavigateTo("/home");
             }
             else
             {

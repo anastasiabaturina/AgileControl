@@ -1,4 +1,6 @@
 ﻿using AgileControl.API.Models.Requests;
+using AgileControl.API.Models.Responses;
+using AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
 using AgileControl.Applicaion.Models.Requests;
 using AgileControl.Client.Interfaces;
 using Blazored.LocalStorage;
@@ -18,9 +20,9 @@ public class AuthenticationService : IAuthenticationService
         _localStorage = localStorage;
     }
 
-    // Регистрация нового пользователя
     public async Task<string> RegisterAsync(string email, string userName, string password)
     {
+        Console.WriteLine($"Отправка запроса на регистрацию: {email}, {userName}");
         var requestBody = new RegisterUserRequest
         {
             Email = email,
@@ -29,18 +31,16 @@ public class AuthenticationService : IAuthenticationService
         };
 
         var response = await _httpClient.PostAsJsonAsync("api/v1/auth/register", requestBody);
-
         if (response.IsSuccessStatusCode)
         {
-            var token = await response.Content.ReadAsStringAsync();
-            await AuthenticateAsync(token); // Сохраняем токен в localStorage
-            return token;
+            var result = await response.Content.ReadFromJsonAsync<Response<RegisterUserCommandResponse>>();
+            await AuthenticateAsync(result.Data.Token); // Предполагая, что токен лежит в поле Token
+            return result.Data.Token;
         }
 
-        return null; // Ошибка регистрации
+        return null;
     }
 
-    // Логин пользователя
     public async Task<string> LoginAsync(string email, string password)
     {
         var requestBody = new LoginUserRequest
@@ -54,35 +54,31 @@ public class AuthenticationService : IAuthenticationService
         if (response.IsSuccessStatusCode)
         {
             var token = await response.Content.ReadAsStringAsync();
-            await AuthenticateAsync(token); // Сохраняем токен в localStorage
+            await AuthenticateAsync(token); 
             return token;
         }
 
-        return null; // Ошибка логина
+        return null;
     }
 
-    // Аутентификация (сохранение токена в localStorage)
     public async Task AuthenticateAsync(string token)
     {
         await _localStorage.SetItemAsync("authToken", token);
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
-    // Получение текущего токена из localStorage
     public async Task<string> GetTokenAsync()
     {
         var token = await _localStorage.GetItemAsync<string>("authToken");
         return token ?? string.Empty;
     }
 
-    // Выход из системы (удаление токена)
     public async Task LogoutAsync()
     {
         await _localStorage.RemoveItemAsync("authToken");
         _httpClient.DefaultRequestHeaders.Authorization = null;
     }
 
-    // Проверка, авторизован ли пользователь
     public async Task<bool> IsAuthenticatedAsync()
     {
         var token = await GetTokenAsync();

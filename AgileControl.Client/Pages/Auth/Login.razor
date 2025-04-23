@@ -3,11 +3,24 @@
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 
-<MudTextField @bind-Value="email" Label="Email" Variant="Variant.Filled" />
-<MudTextField @bind-Value="password" Label="Password" Type="password" Variant="Variant.Filled" />
-<MudButton OnClick="LoginHandler" Variant="Variant.Filled" Color="Color.Primary">Login</MudButton>
+<MudPaper Class="pa-4" Elevation="3">
+    <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">
+        Вход в Agile Control
+    </MudText>
+
+    <MudForm @ref="form" OnValidSubmit="HandleRegistration">
+        <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="password" Label="Пароль" Type="password" Variant="Variant.Filled" Required="true" />
+
+        <MudButton OnClick="LoginHandler" Type="Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
+            Войти
+        </MudButton>
+    </MudForm>
+</MudPaper>
 
 @code {
+    private MudForm form;
+
     private string email;
     private string password;
 
@@ -16,13 +29,10 @@
         var token = await AuthenticationService.LoginAsync(email, password);
         if (!string.IsNullOrEmpty(token))
         {
-            // Успешная аутентификация
             NavigationManager.NavigateTo("/home");
         }
         else
         {
-            // Ошибка при аутентификации
-            // Показать ошибку
         }
     }
 }

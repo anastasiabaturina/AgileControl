@@ -15,15 +15,12 @@ public class AuthController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
-    private readonly IConfiguration _configuration;
 
     public AuthController(IMapper mapper,
-        IMediator mediator,
-        IConfiguration configuration)
+        IMediator mediator)
     {
         _mapper = mapper;
         _mediator = mediator;
-        _configuration = configuration;
     }
 
     [HttpPost("register")]
@@ -38,7 +35,7 @@ public class AuthController : ControllerBase
             Data = token,
         };
 
-        return CreatedAtAction(nameof(Register), response);
+        return Ok(response);
     }
 
     [HttpPost("login")]

@@ -1,18 +1,106 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@using MudBlazor
+@using System.Security.Claims
 
-<MudThemeProvider />
+<MudThemeProvider Theme="_theme" IsDarkMode="@_isDarkMode" @ref="_themeProvider" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar>
-        Agile Control
-    </MudAppBar>
-    <MudDrawer Open="true">
+    <MudAppBar Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+        Color="Color.Inherit"
+        Edge="Edge.Start"
+        OnClick="@((e) => DrawerToggle())" />
 
+        <MudText Typo="Typo.h5"
+        Style="font-family: 'Montserrat'; font-weight: 600; flex-grow: 1;">
+            Agile Control
+        </MudText>
+
+        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
+        Color="Color.Inherit"
+        OnClick="@ToggleTheme"
+        Title="@(_isDarkMode ? "Светлая тема" : "Тёмная тема")" />
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <MudNavMenu>
+            @if (_isAuthenticated)
+            {
+                <MudNavLink Href="/home" Icon="@Icons.Material.Filled.Home">Главная</MudNavLink>
+                @if (_user.IsInRole("Admin"))
+                {
+                    <MudNavLink Href="/admin" Icon="@Icons.Material.Filled.AdminPanelSettings">Админка</MudNavLink>
+                }
+                <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.Person">Профиль</MudNavLink>
+            }
+            else
+            {
+                <MudNavLink Href="/login" Icon="@Icons.Material.Filled.Login">Вход</MudNavLink>
+                <MudNavLink Href="/register" Icon="@Icons.Material.Filled.AppRegistration">Регистрация</MudNavLink>
+            }
+        </MudNavMenu>
     </MudDrawer>
+
     <MudMainContent>
         @Body
     </MudMainContent>
-</MudLayout> 
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+    private bool _isDarkMode = false;
+    private MudThemeProvider? _themeProvider;
+    private bool _isAuthenticated = false;
+    private ClaimsPrincipal _user = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        _user = authState.User;
+        _isAuthenticated = _user.Identity?.IsAuthenticated ?? false;
+
+        if (!_isAuthenticated)
+            _drawerOpen = false;
+    }
+
+    private MudTheme _theme = new()
+        {
+            PaletteLight = new PaletteLight()
+            {
+                Primary = "#81C784",
+                Secondary = "#A5D6A7",
+                Background = "#F1F8E9",
+                AppbarBackground = "#E8F5E9",
+                TextPrimary = "#2E7D32",
+                Surface = "#FFFFFF",
+                DrawerBackground = "#FFFFFF",
+                DrawerText = "#2E7D32"
+            },
+            PaletteDark = new PaletteDark()
+            {
+                Primary = "#689F38",
+                Secondary = "#8BC34A",
+                Background = "#121212",
+                AppbarBackground = "#1B5E20",
+                TextPrimary = "#FFFFFF", 
+                Surface = "#1E1E1E",  
+                DrawerBackground = "#1E1E1E",
+                DrawerText = "#FFFFFF",
+                ActionDefault = "#FFFFFF", 
+                TextDisabled = "#B0B0B0" 
+            },
+};
+
+    private void DrawerToggle() => _drawerOpen = !_drawerOpen;
+
+    private void ToggleTheme()
+    {
+        _isDarkMode = !_isDarkMode;
+        StateHasChanged();
+    }
+}

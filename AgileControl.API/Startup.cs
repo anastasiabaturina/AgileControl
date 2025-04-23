@@ -1,5 +1,6 @@
 ﻿using AgileControl.API.Middlewaries;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
+using AgileControl.Client;
 using AgileControl.Domain.Entities;
 using AgileControl.Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -68,6 +69,16 @@ public class Startup
             });
 
         });
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -91,6 +102,8 @@ public class Startup
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        app.UseCors("AllowAll");
 
         app.UseAuthentication();
         app.UseAuthorization();
