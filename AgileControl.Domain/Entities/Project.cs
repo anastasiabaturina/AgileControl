@@ -26,4 +26,6 @@ public class Project
 
     [JsonIgnore]
     public ICollection<Sprint>? Sprints { get; set; }
+
+    //добавить статус bool завершился или нет преокт
 }

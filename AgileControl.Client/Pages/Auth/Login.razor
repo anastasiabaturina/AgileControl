@@ -1,4 +1,6 @@
 ﻿@page "/login"
+@inject AuthStateProvider AuthStateProvider
+@using AgileControl.Client.Feature.AuthProviders
 @using AgileControl.Client.Interfaces
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
@@ -29,6 +31,7 @@
         var token = await AuthenticationService.LoginAsync(email, password);
         if (!string.IsNullOrEmpty(token))
         {
+            await AuthStateProvider.NotifyUserAuthenticationAsync(token);
             NavigationManager.NavigateTo("/home");
         }
         else

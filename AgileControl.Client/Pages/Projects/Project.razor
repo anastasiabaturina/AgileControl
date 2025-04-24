@@ -1,0 +1,112 @@
+﻿@page "/projects/{ProjectId:guid}"
+@using AgileControl.Applicaion.Features.ProjectsFeatures.Queries.GetInfoProgect
+@using MudBlazor
+@inject IProjectService ProjectService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="my-6">
+    @if (_project == null)
+    {
+        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Class="mx-auto" />
+    }
+    else
+    {
+        <MudPaper Elevation="3" Class="pa-6">
+            <!-- Заголовок проекта -->
+            <div class="d-flex align-center mb-4">
+                <MudText Typo="Typo.h4" Class="mr-3">@_project.Title</MudText>
+                <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" />
+            </div>
+
+            <!-- Основная информация -->
+            <MudGrid>
+                <MudItem xs="12" md="8">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">Описание:</MudText>
+                    <MudText Class="mb-4">@(_project.Description ?? "Описание отсутствует")</MudText>
+
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">Даты:</MudText>
+                    <div class="d-flex" style="gap: 20px;">
+                        <div>
+                            <MudText Class="text-caption">Создан:</MudText>
+                            <MudText>@_project.CreatedDate.ToString("dd.MM.yyyy")</MudText>
+                        </div>
+                        @if (_project.EndDate.HasValue)
+                        {
+                            <div>
+                                <MudText Class="text-caption">Завершение:</MudText>
+                                <MudText>@_project.EndDate.Value.ToString("dd.MM.yyyy")</MudText>
+                            </div>
+                        }
+                    </div>
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+                    <MudCard Class="pa-4">
+                        <MudText Typo="Typo.subtitle1" Class="mb-3">Автор проекта</MudText>
+                        <div class="d-flex align-center">
+                            <MudAvatar Color="Color.Primary"></MudAvatar>
+                            <div class="ml-3">
+                                <MudText>@_project.Creator.UserName</MudText>
+                                <MudText Typo="Typo.caption">@_project.Creator.Email</MudText>
+                            </div>
+                        </div>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+
+            <!-- Действия -->
+            <div class="d-flex justify-end mt-6" style="gap: 10px;">
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Primary"
+                          StartIcon="@Icons.Material.Filled.Edit"
+                          OnClick="@(() => Navigation.NavigateTo($"/projects/edit/{_project.Id}"))">
+                    Редактировать
+                </MudButton>
+                <MudButton Variant="Variant.Filled" 
+                          Color="Color.Primary"
+                          StartIcon="@Icons.Material.Filled.List"
+                          OnClick="@(() => Navigation.NavigateTo($"/projects/{_project.Id}/tasks"))">
+                    Задачи проекта
+                </MudButton>
+            </div>
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    [Parameter] public Guid ProjectId { get; set; }
+    private GetInfoGueryIDResponse? _project;
+    private bool _isLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadProject();
+    }
+
+    private async Task LoadProject()
+    {
+        _isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            _project = await ProjectService.GetProjectByIdAsync(ProjectId);
+            if (_project == null)
+            {
+                Snackbar.Add("Проект не найден", Severity.Error);
+                Navigation.NavigateTo("/projects");
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ошибка загрузки: {ex.Message}", Severity.Error);
+            Navigation.NavigateTo("/projects");
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+}

@@ -1,4 +1,4 @@
-﻿namespace AgileControl.API.Models.Requests;
+﻿namespace AgileControl.Shared.Features.Requests.Auth;
 
 public class RegisterUserRequest
 {

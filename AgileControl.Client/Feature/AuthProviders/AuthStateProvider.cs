@@ -20,37 +20,33 @@ public class AuthStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        // Получаем токен из localStorage
         var token = await _localStorage.GetItemAsync<string>("authToken");
 
-        // Если токен отсутствует, возвращаем состояние как анонимное
         if (string.IsNullOrWhiteSpace(token))
             return _anonymous;
 
-        // Добавляем токен в заголовок Authorization для всех запросов
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        return await CreateAuthState(token);
+    }
 
-        // Разбираем токен и создаем ClaimsPrincipal
+    public async Task NotifyUserAuthenticationAsync(string token)
+    {
+        await _localStorage.SetItemAsync("authToken", token);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        NotifyAuthenticationStateChanged(CreateAuthState(token));
+    }
+
+    public async Task NotifyUserLogoutAsync()
+    {
+        await _localStorage.RemoveItemAsync("authToken");
+        _httpClient.DefaultRequestHeaders.Authorization = null;
+        NotifyAuthenticationStateChanged(Task.FromResult(_anonymous));
+    }
+
+    private Task<AuthenticationState> CreateAuthState(string token)
+    {
         var claims = JwtParser.ParseClaimsFromJwt(token);
         var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwtAuthType"));
-
-        // Возвращаем аутентифицированное состояние
-        return new AuthenticationState(user);
-    }
-
-    // Метод для уведомления системы о том, что пользователь аутентифицирован
-    public void NotifyUserAuthentication(string token)
-    {
-        var claims = JwtParser.ParseClaimsFromJwt(token);
-        var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwtAuthType"));
-        var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
-        NotifyAuthenticationStateChanged(authState);
-    }
-
-    // Метод для уведомления о выходе пользователя
-    public void NotifyUserLogout()
-    {
-        var authState = Task.FromResult(_anonymous);
-        NotifyAuthenticationStateChanged(authState);
+        return Task.FromResult(new AuthenticationState(user));
     }
 }

@@ -1,6 +1,9 @@
 ﻿@inherits LayoutComponentBase
-@inject AuthenticationStateProvider AuthStateProvider
+@implements IDisposable
+@inject AuthStateProvider AuthStateProvider
 @inject NavigationManager Navigation
+@inject IAuthenticationService AuthenticationService
+@using AgileControl.Client.Feature.AuthProviders
 @using MudBlazor
 @using System.Security.Claims
 
@@ -32,16 +35,21 @@
             @if (_isAuthenticated)
             {
                 <MudNavLink Href="/home" Icon="@Icons.Material.Filled.Home">Главная</MudNavLink>
-                @if (_user.IsInRole("Admin"))
-                {
-                    <MudNavLink Href="/admin" Icon="@Icons.Material.Filled.AdminPanelSettings">Админка</MudNavLink>
-                }
                 <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.Person">Профиль</MudNavLink>
+                <MudNavLink Href="/projects" Icon="@Icons.Material.Filled.Work">Проекты</MudNavLink>
+                <MudNavLink Href="/tasks" Icon="@Icons.Material.Filled.Work">Задачи</MudNavLink>
+                <MudNavLink Href="/sprints" Icon="@Icons.Material.Filled.Work">Спринты</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Filled.Logout"
+                OnClick="@Logout"
+                Class="logout-button">
+                    Выход
+                </MudNavLink>
             }
             else
             {
                 <MudNavLink Href="/login" Icon="@Icons.Material.Filled.Login">Вход</MudNavLink>
                 <MudNavLink Href="/register" Icon="@Icons.Material.Filled.AppRegistration">Регистрация</MudNavLink>
+                <MudNavLink Href="/start" Icon="@Icons.Material.Filled.Start">Старт</MudNavLink>
             }
         </MudNavMenu>
     </MudDrawer>
@@ -60,12 +68,22 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await UpdateAuthenticationState();
+        ((AuthStateProvider)AuthStateProvider).AuthenticationStateChanged += OnAuthenticationStateChanged;
+    }
+
+    private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+    {
+        await UpdateAuthenticationState();
+        StateHasChanged();
+    }
+
+    private async Task UpdateAuthenticationState()
+    {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         _user = authState.User;
         _isAuthenticated = _user.Identity?.IsAuthenticated ?? false;
-
-        if (!_isAuthenticated)
-            _drawerOpen = false;
+        _drawerOpen = _isAuthenticated || _drawerOpen;
     }
 
     private MudTheme _theme = new()
@@ -102,5 +120,19 @@
     {
         _isDarkMode = !_isDarkMode;
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        if (AuthStateProvider is AuthStateProvider provider)
+        {
+            provider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+        }
+    }
+
+    private async Task Logout()
+    {
+        await ((AuthStateProvider)AuthStateProvider).NotifyUserLogoutAsync();
+        Navigation.NavigateTo("/start", forceLoad: true);
     }
 }

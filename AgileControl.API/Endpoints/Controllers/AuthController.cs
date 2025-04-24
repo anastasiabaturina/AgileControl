@@ -1,8 +1,8 @@
-﻿using AgileControl.API.Models.Requests;
-using AgileControl.API.Models.Responses;
+﻿using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Login;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
-using AgileControl.Applicaion.Models.Requests;
+using AgileControl.Client.Pages.Auth;
+using AgileControl.Shared.Features.Requests.Auth;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
             Data = token,
         };
 
-        return Ok(response);
+        return CreatedAtAction(nameof(Register), response);
     }
 
     [HttpPost("login")]

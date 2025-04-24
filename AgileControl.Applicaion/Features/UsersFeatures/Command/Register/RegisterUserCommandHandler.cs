@@ -37,9 +37,16 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
             Email = command.Email,
         };
 
-        var claims = new[]
+        var result = await _userManager.CreateAsync(user, command.Password);
+
+        if (result.Errors.Any())
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Email)
+            throw new BadRequestException(result.Errors.First().Description);
+        }
+
+        var claims = new[]
+{
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
 
         var jwtSettings = _configuration.GetSection("JWTSettings");
@@ -57,13 +64,6 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
         );
 
         var tokenResponse = new JwtSecurityTokenHandler().WriteToken(token);
-
-        var result = await _userManager.CreateAsync(user, command.Password);
-
-        if (result.Errors.Any())
-        {
-            throw new BadRequestException(result.Errors.First().Description);
-        }
 
         return new RegisterUserCommandResponse
         {

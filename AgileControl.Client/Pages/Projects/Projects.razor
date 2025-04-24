@@ -1,0 +1,16 @@
+﻿@page "/projects"
+@inject NavigationManager NavigationManager
+
+<MudButton Variant="Variant.Outlined"
+           EndIcon="@Icons.Material.Filled.PersonAdd"
+           OnClick="NavigateToCreateProject"
+           Style="font-weight: 500; letter-spacing: 0.5px; text-transform: none; padding: 8px 20px;">
+    Создать проект
+</MudButton>
+
+@code{
+    private void NavigateToCreateProject()
+    {
+        NavigationManager.NavigateTo("/create");
+    }
+}

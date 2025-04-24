@@ -1,4 +1,4 @@
-﻿namespace AgileControl.Applicaion.Models.Requests;
+﻿namespace AgileControl.Shared.Features.Requests.Auth;
 
 public class LoginUserRequest
 {

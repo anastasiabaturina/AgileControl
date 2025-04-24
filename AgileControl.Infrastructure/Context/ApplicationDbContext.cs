@@ -12,11 +12,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     {
     }
 
-    public async Task SaveChangesAsync(CancellationToken cancellationToken)
-    {
-        await base.SaveChangesAsync(cancellationToken);
-    }
-
     public DbSet<Project> Projects { get; set; } 
 
     public DbSet<ProjectMember> ProjectMembers { get; set; } 

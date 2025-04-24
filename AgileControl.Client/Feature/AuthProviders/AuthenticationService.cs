@@ -1,8 +1,7 @@
-﻿using AgileControl.API.Models.Requests;
-using AgileControl.API.Models.Responses;
+﻿using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
-using AgileControl.Applicaion.Models.Requests;
 using AgileControl.Client.Interfaces;
+using AgileControl.Shared.Features.Requests.Auth;
 using Blazored.LocalStorage;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;

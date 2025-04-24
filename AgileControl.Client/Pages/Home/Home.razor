@@ -1,6 +1,29 @@
-﻿@page "/home"
+﻿@inject NavigationManager NavigationManager
+
+@page "/home"
 <h3>Home</h3>
 
-@code {
+<MudButton Variant="Variant.Outlined"
+           EndIcon="@Icons.Material.Filled.PersonAdd"
+           OnClick="NavigateToProject"
+           Style="font-weight: 500; letter-spacing: 0.5px; text-transform: none; padding: 8px 20px;">
+    Проекты
+</MudButton>
+<MudButton Variant="Variant.Outlined"
+           EndIcon="@Icons.Material.Filled.PersonAdd"
+           OnClick="NavigateToCreateProject"
+           Style="font-weight: 500; letter-spacing: 0.5px; text-transform: none; padding: 8px 20px;">
+    Создать проект
+</MudButton>
 
+@code {
+    private void NavigateToProject()
+    {
+        NavigationManager.NavigateTo("/projects");
+    }
+
+    private void NavigateToCreateProject()
+    {
+        NavigationManager.NavigateTo("/projects/create");
+    }
 }
