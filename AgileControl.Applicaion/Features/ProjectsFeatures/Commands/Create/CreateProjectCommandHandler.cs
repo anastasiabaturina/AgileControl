@@ -1,4 +1,5 @@
 ﻿using AgileControl.Domain.Entities;
+using AgileControl.Domain.Enums;
 using AgileControl.Infrastructure.Context;
 using AutoMapper;
 using MediatR;
@@ -24,11 +25,30 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
 
         var project = _mapper.Map<Project>(command);
 
-        var user = await _userManager.FindByIdAsync(command.CreaterId.ToString());
+        var creatorUser = await _userManager.FindByIdAsync(command.CreaterId.ToString());
 
-        project.CreatorUser = user;
+        project.CreatorUser = creatorUser;
 
         _context.Projects.Add(project);
+        foreach (var projectMemberRequest in command.ProjectMembers)
+        {
+            var user = await _userManager.FindByIdAsync(projectMemberRequest.UserId.ToString());
+            if (user == null)
+            {
+                continue;
+            }
+
+            var projectMember = new ProjectMember
+            {
+                UserId = user.Id,
+                PojectId = project.Id,
+                User = user,
+                Project = project,
+                ProjectRole = (ProjectRole?)projectMemberRequest.ProjectRole
+            };
+
+            _context.ProjectMembers.Add(projectMember);
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
 

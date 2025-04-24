@@ -67,7 +67,13 @@
                           Color="Color.Primary"
                           StartIcon="@Icons.Material.Filled.List"
                           OnClick="@(() => Navigation.NavigateTo($"/projects/{_project.Id}/tasks"))">
-                    Задачи проекта
+                    Бэклог проекта
+                </MudButton>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.List"
+                           OnClick="@(() => Navigation.NavigateTo($"/projects/{_project.Id}/sprints/tasks"))">
+                    Бэклог спринта
                 </MudButton>
             </div>
         </MudPaper>

@@ -19,6 +19,7 @@ public class GetInfoProjectIDQueryIHandler : IRequestHandler<GetInfoProjectIDQue
     {
         var project = await _context.Projects
             .Include(p => p.CreatorUser)
+            .Include(p => p.ProgectMembers)
             .FirstOrDefaultAsync(p => p.Id == query.ProjectId, cancellationToken);
 
         if (project == null)
