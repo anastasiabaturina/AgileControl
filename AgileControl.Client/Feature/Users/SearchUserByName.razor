@@ -1,0 +1,40 @@
+﻿@page "/search"
+
+@using AgileControl.Applicaion.Features.UsersFeatures.Queries.Search
+@using AgileControl.Applicaion.Models.Dtos
+@using MudBlazor
+@inject IUserService UserService
+@inject ISnackbar Snackbar
+
+<MudAutocomplete T="UserDto"
+                 Label="Поиск пользователей"
+                 @bind-Value="SelectedUser"
+                 SearchFunc="SearchUsers"
+                 ToStringFunc="@(u => u?.UserName ?? string.Empty)"
+                 DebounceInterval="300"
+                 MinCharacters="2">
+    <ItemTemplate Context="user">
+        <div style="padding: 5px">
+            <MudText>@user.UserName</MudText>
+            <MudText Typo="Typo.caption" Color="Color.Secondary">@user.Email</MudText>
+        </div>
+    </ItemTemplate>
+</MudAutocomplete>
+
+@code {
+    private UserDto SelectedUser { get; set; }
+
+    private async Task<IEnumerable<UserDto>> SearchUsers(string searchText, CancellationToken token)
+    {
+        try
+        {
+            var response = await UserService.SearchByName(searchText, 10);
+            return response.Users;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ошибка поиска: {ex.Message}", Severity.Error);
+            return Enumerable.Empty<UserDto>();
+        }
+    }
+}

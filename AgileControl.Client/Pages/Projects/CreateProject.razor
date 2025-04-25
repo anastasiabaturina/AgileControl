@@ -1,39 +1,42 @@
 ﻿@page "/projects/create"
+@using AgileControl.Applicaion.Models.Dtos
 @using AgileControl.Shared.Features.Requests.Projects
+@using AgileControl.Domain.Enums
 @using MudBlazor
 @using System.Net
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 @inject IProjectService ProjectService
+@* @inject ICurrentUserService CurrentUserService *@
 
 <MudPaper Class="pa-8" Elevation="5" Style="max-width: 800px; margin: 30px auto;">
     <MudText Typo="Typo.h4" Class="mb-6">Создание нового проекта</MudText>
 
     <MudForm @ref="_form" Model="_projectRequest" @onsubmit="HandleSubmit">
-        <MudTextField @bind-Value="_projectRequest.Title" 
-                     Label="Название проекта*" 
-                     Variant="Variant.Outlined"
-                     Required="true"
-                     RequiredError="Название обязательно"
-                     Class="mb-4"/>
+        <MudTextField @bind-Value="_projectRequest.Title"
+                      Label="Название проекта*"
+                      Variant="Variant.Outlined"
+                      Required="true"
+                      RequiredError="Название обязательно"
+                      Class="mb-4" />
 
-        <MudTextField @bind-Value="_projectRequest.Description" 
-                     Label="Описание"
-                     Variant="Variant.Outlined"
-                     Multiline="true"
-                     Rows="4"
-                     Class="mb-4"/>
+        <MudTextField @bind-Value="_projectRequest.Description"
+                      Label="Описание"
+                      Variant="Variant.Outlined"
+                      Multiline="true"
+                      Rows="4"
+                      Class="mb-4" />
 
         <MudDatePicker @bind-Date="_projectRequest.EndDate"
-                      Label="Дата завершения"
-                      Variant="Variant.Outlined"
-                      Class="mb-6"/>
+                       Label="Дата завершения"
+                       Variant="Variant.Outlined"
+                       Class="mb-6" />
 
         <div class="d-flex justify-end" style="gap: 16px;">
-            <MudButton Variant="Variant.Filled" 
-                      Color="Color.Primary" 
-                      ButtonType="ButtonType.Submit"
-                      Disabled="_isProcessing">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       ButtonType="ButtonType.Submit"
+                       Disabled="_isProcessing">
                 @(_isProcessing ? "Создание..." : "Создать проект")
             </MudButton>
         </div>

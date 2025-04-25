@@ -11,7 +11,7 @@ public class GetInfoGueryIDResponse
     public DateTime CreatedDate { get; set; }
     public DateTime? EndDate { get; set; }
 
-    public CreaterUserDto Creator { get; set; } = default!;
+    public UserDto Creator { get; set; } = default!;
 
-    public List<ProjectMemberDto> ProjectMembers { get; set; } = new List<ProjectMemberDto>();
+    public List<ProjectMemberDtoResponse> ProjectMembers { get; set; } = new List<ProjectMemberDtoResponse>();
 }

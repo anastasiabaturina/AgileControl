@@ -8,5 +8,5 @@ public class CreateProjectRequest
 
     public DateTime? EndDate { get; set; }
 
-    public List<ProjectMemberRequest> ProjectMembers { get; set; } = new List<ProjectMemberRequest>();
+    public List<ProjectMemberRequest>? ProjectMembers { get; set; } = new List<ProjectMemberRequest>();
 }

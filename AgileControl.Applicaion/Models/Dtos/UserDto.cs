@@ -1,6 +1,6 @@
 ﻿namespace AgileControl.Applicaion.Models.Dtos;
 
-public class CreaterUserDto
+public class UserDto
 {
     public Guid Id { get; set; }
     public string UserName { get; set; } = default!;

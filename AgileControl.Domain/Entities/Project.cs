@@ -19,13 +19,11 @@ public class Project
     public DateTime? EndDate { get; set; }
 
     [JsonIgnore]
-    public ICollection<ProjectTask>? Tasks { get; set; }
+    public ICollection<ProjectTask> Tasks { get; set; }
 
     [JsonIgnore]
-    public ICollection<ProjectMember>? ProgectMembers { get; set; }
+    public ICollection<ProjectMember> ProgectMembers { get; set; }
 
     [JsonIgnore]
-    public ICollection<Sprint>? Sprints { get; set; }
-
-    //добавить статус bool завершился или нет преокт
+    public ICollection<Sprint> Sprints { get; set; }
 }

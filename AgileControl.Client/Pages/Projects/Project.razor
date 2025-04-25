@@ -1,5 +1,6 @@
 ﻿@page "/projects/{ProjectId:guid}"
 @using AgileControl.Applicaion.Features.ProjectsFeatures.Queries.GetInfoProgect
+@using AgileControl.Domain.Enums
 @using MudBlazor
 @inject IProjectService ProjectService
 @inject NavigationManager Navigation
@@ -57,16 +58,16 @@
 
             <!-- Действия -->
             <div class="d-flex justify-end mt-6" style="gap: 10px;">
-                <MudButton Variant="Variant.Outlined" 
-                          Color="Color.Primary"
-                          StartIcon="@Icons.Material.Filled.Edit"
-                          OnClick="@(() => Navigation.NavigateTo($"/projects/edit/{_project.Id}"))">
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Edit"
+                           OnClick="@(() => Navigation.NavigateTo($"/projects/edit/{_project.Id}"))">
                     Редактировать
                 </MudButton>
-                <MudButton Variant="Variant.Filled" 
-                          Color="Color.Primary"
-                          StartIcon="@Icons.Material.Filled.List"
-                          OnClick="@(() => Navigation.NavigateTo($"/projects/{_project.Id}/tasks"))">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.List"
+                           OnClick="@(() => Navigation.NavigateTo($"/projects/{_project.Id}/tasks"))">
                     Бэклог проекта
                 </MudButton>
                 <MudButton Variant="Variant.Filled"
@@ -77,6 +78,38 @@
                 </MudButton>
             </div>
         </MudPaper>
+
+        <!-- Участники проекта -->
+        <MudPaper Elevation="1" Class="pa-4 mt-6">
+            <MudText Typo="Typo.h6" Class="mb-4">Участники проекта</MudText>
+
+            @if (_project.ProjectMembers == null || !_project.ProjectMembers.Any())
+            {
+                <MudText>Нет участников.</MudText>
+            }
+            else
+            {
+                <MudList T="object">
+                    @foreach (var member in _project.ProjectMembers)
+                    {
+                        <MudListItem T="object">
+                            <div class="d-flex align-center" style="gap: 16px;">
+                                <MudAvatar Color="Color.Primary" Icon="@Icons.Material.Filled.Person" />
+                                <div>
+                                    <MudText>@member.UserName</MudText>
+                                    <MudText Typo="Typo.caption">@member.UserEmail</MudText>
+                                </div>
+
+                                <!-- Перевод роли с помощью Dictionary -->
+                                <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined" Class="ml-auto">
+                                    @GetRoleText(member.ProjectRole)
+                                </MudChip>
+                            </div>
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+        </MudPaper>
     }
 </MudContainer>
 
@@ -84,6 +117,25 @@
     [Parameter] public Guid ProjectId { get; set; }
     private GetInfoGueryIDResponse? _project;
     private bool _isLoading = true;
+
+    private static readonly Dictionary<ProjectRole, string> ProjectRoleDictionary = new()
+    {
+        { ProjectRole.Owner, "Создатель" },
+        { ProjectRole.ScrumMaster, "Скрам мастер" },
+        { ProjectRole.Developer, "Разработчик" },
+        { ProjectRole.ProductOwner, "Заказчик" },
+        { ProjectRole.Guest, "Гость" },
+    };
+
+    // Метод для получения текста роли
+    private string GetRoleText(ProjectRole? role)
+    {
+        if (role.HasValue && ProjectRoleDictionary.ContainsKey(role.Value))
+        {
+            return ProjectRoleDictionary[role.Value];
+        }
+        return "Не указана";
+    }
 
     protected override async Task OnParametersSetAsync()
     {

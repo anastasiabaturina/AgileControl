@@ -2,6 +2,7 @@
 using AgileControl.Applicaion.Features.ProjectsFeatures.Queries.GetInfoProgect;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Login;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
+using AgileControl.Applicaion.Features.UsersFeatures.Queries.Search;
 using AgileControl.Applicaion.Models.Dtos;
 using AgileControl.Domain.Entities;
 using AgileControl.Domain.Enums;
