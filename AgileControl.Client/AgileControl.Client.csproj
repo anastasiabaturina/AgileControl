@@ -20,4 +20,8 @@
     <ProjectReference Include="..\AgileControl.Shared\AgileControl.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Tasks\" />
+  </ItemGroup>
+
 </Project>

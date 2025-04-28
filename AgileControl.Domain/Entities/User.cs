@@ -5,6 +5,10 @@ namespace AgileControl.Domain.Entities;
 
 public class User : IdentityUser<Guid>
 {
+    public string FirstName { get; set; } = default!;
+
+    public string LastName { get; set; } = default!;
+
     [JsonIgnore]
     public ICollection<ProjectMember> ProjectMemberships { get; set; } = new List<ProjectMember>();
 

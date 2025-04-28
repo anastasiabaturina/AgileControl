@@ -11,7 +11,8 @@
 
     <MudForm @ref="form" OnValidSubmit="HandleRegistration">
         <MudTextField @bind-Value="Email" Label="Email" Variant="Variant.Filled" Required="true" />
-        <MudTextField @bind-Value="UserName" Label="Имя пользователя" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="FirstName" Label="Имя" Variant="Variant.Filled" Required="true" />
+        <MudTextField @bind-Value="LastName" Label="Фамилия" Variant="Variant.Filled" Required="true" />
         <MudTextField @bind-Value="Password" Label="Пароль" Type="password" Variant="Variant.Filled" Required="true" />
         <MudTextField @bind-Value="ConfirmPassword" Label="Подтверждение пароля" Type="password" Variant="Variant.Filled" Required="true" />
 
@@ -25,14 +26,14 @@
     private MudForm form;
 
     public string Email { get; set; }
-    public string UserName { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
     public string Password { get; set; }
     public string ConfirmPassword { get; set; }
 
 
     private async Task HandleRegistration()
     {
-        // Проверка совпадения паролей
         if (Password != ConfirmPassword)
         {
             Snackbar.Add("Пароли не совпадают.", MudBlazor.Severity.Error);
@@ -41,10 +42,8 @@
 
         try
         {
-            // Вызов метода RegisterAsync из AuthenticationService
-            var token = await AuthenticationService.RegisterAsync(Email, UserName,  Password);
+            var token = await AuthenticationService.RegisterAsync(Email, FirstName, LastName, Password);
 
-            // Проверка успешной регистрации
             if (!string.IsNullOrEmpty(token))
             {
                 Snackbar.Add("Регистрация успешна!", MudBlazor.Severity.Success);
@@ -57,7 +56,6 @@
         }
         catch (Exception ex)
         {
-            // Обработка ошибок
             Snackbar.Add($"Ошибка: {ex.Message}", MudBlazor.Severity.Error);
         }
     }

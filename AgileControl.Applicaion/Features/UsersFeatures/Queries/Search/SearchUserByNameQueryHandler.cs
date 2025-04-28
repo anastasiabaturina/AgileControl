@@ -2,7 +2,6 @@
 using AgileControl.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using static AgileControl.Applicaion.Features.UsersFeatures.Queries.Search.SearchUserByNameResponse;
 
 namespace AgileControl.Applicaion.Features.UsersFeatures.Queries.Search;
 
@@ -18,7 +17,8 @@ public class SearchUserByNameQueryHandler : IRequestHandler<SearchUserByNameQuer
     public Task<SearchUserByNameResponse> Handle(SearchUserByNameQuery query, CancellationToken cancellationToken)
     {
         var usersQuery = _userManager.Users
-           .Where(u => u.UserName.Contains(query.SearchName) ||
+           .Where(u => u.FirstName.Contains(query.SearchName) ||
+                       u.LastName.Contains(query.SearchName) ||
                        u.Email.Contains(query.SearchName));
 
         if (query.Limit > 0)
@@ -33,7 +33,7 @@ public class SearchUserByNameQueryHandler : IRequestHandler<SearchUserByNameQuer
             Users = users.Select(u => new UserDto
             {
                 Id = u.Id,
-                UserName = u.UserName,
+                UserName = $"{u.FirstName} {u.LastName}",
                 Email = u.Email
             }).ToList()
         };

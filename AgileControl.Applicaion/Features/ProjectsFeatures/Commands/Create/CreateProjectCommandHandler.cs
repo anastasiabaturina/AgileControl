@@ -1,7 +1,5 @@
 ﻿using AgileControl.Domain.Entities;
-using AgileControl.Domain.Enums;
 using AgileControl.Infrastructure.Context;
-using AgileControl.Shared.Features.Requests.Projects;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +34,7 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
             PojectId = project.Id,
             User = creatorUser,
             Project = project,
-            ProjectRole = ProjectRole.Owner
+            ProjectRole = Domain.Enums.ProjectRole.Owner
         };
 
         _context.ProjectMembers.Add(projectMemberOwner);
@@ -56,7 +54,7 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
                 PojectId = project.Id,
                 User = user,
                 Project = project,
-                ProjectRole = (ProjectRole?)projectMemberRequest.ProjectRole
+                ProjectRole = (Domain.Enums.ProjectRole?)projectMemberRequest.ProjectRole
             };
 
             _context.ProjectMembers.Add(projectMember);

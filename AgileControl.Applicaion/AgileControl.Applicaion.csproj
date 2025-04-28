@@ -15,8 +15,6 @@
   <ItemGroup>
     <Folder Include="Features\SprintFeatures\Commands\" />
     <Folder Include="Features\SprintFeatures\Queries\" />
-    <Folder Include="Features\TasksFeatures\Commands\" />
-    <Folder Include="Features\TasksFeatures\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

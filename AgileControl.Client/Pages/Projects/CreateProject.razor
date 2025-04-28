@@ -1,13 +1,15 @@
 ﻿@page "/projects/create"
+@using System.Net
 @using AgileControl.Applicaion.Models.Dtos
+@using AgileControl.Client.Feature.Projects
 @using AgileControl.Shared.Features.Requests.Projects
-@using AgileControl.Domain.Enums
 @using MudBlazor
+ing MudBlazor
 @using System.Net
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 @inject IProjectService ProjectService
-@* @inject ICurrentUserService CurrentUserService *@
+@inject IUserService UserService
 
 <MudPaper Class="pa-8" Elevation="5" Style="max-width: 800px; margin: 30px auto;">
     <MudText Typo="Typo.h4" Class="mb-6">Создание нового проекта</MudText>
@@ -40,13 +42,70 @@
                 @(_isProcessing ? "Создание..." : "Создать проект")
             </MudButton>
         </div>
+
+        <MudText Typo="Typo.h6" Class="mt-6 mb-2">Участники проекта</MudText>
+
+<MudAutocomplete T="UserDto"
+                 Label="Добавить участника"
+                 SearchFunc="SearchUsers"
+                 ToStringFunc="@(u => u?.UserName ?? string.Empty)"
+                 DebounceInterval="300"
+                 MinCharacters="2"
+                 Clearable="true"
+                 ResetValueOnEmptyText="true"
+                 ValueChanged="OnUserSelected">
+    <ItemTemplate Context="user">
+        <div style="padding: 5px">
+            <MudText>@user.UserName</MudText>
+            <MudText Typo="Typo.caption" Color="Color.Secondary">@user.Email</MudText>
+        </div>
+    </ItemTemplate>
+</MudAutocomplete>
+
+        <MudList T="ProjectMemberRequest" Dense="true" Class="mt-2">
+            @foreach (var member in _projectRequest.ProjectMembers)
+            {
+                <MudListItem>
+                    <div class="d-flex align-center" style="width: 100%; gap: 8px; margin-bottom: 8px;">
+                        <MudText Typo="Typo.body1" Style="min-width: 120px;">@GetUserName(member.UserId)</MudText>
+
+                        <MudSelect T="ProjectRole?"
+                                   @bind-Value="member.ProjectRole"
+                                   Dense="true"
+                                   Variant="Variant.Outlined"
+                                   Style="width: 200px;">
+                            @foreach (var role in Enum.GetValues<ProjectRole>())
+                            {
+                                <MudSelectItem T="ProjectRole?" Value="role">
+                                    <MudIcon Icon="@GetRoleIcon(role)" Class="mr-2" />
+                                    @role.GetDisplayName()
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <div style="margin-left: auto;">
+                            <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                           Color="Color.Error"
+                                           Size="Size.Small"
+                                           OnClick="() => RemoveMember(member.UserId)" />
+                        </div>
+                    </div>
+                </MudListItem>
+            }
+        </MudList>
+
+
     </MudForm>
 </MudPaper>
+
 
 @code {
     private MudForm? _form;
     private CreateProjectRequest _projectRequest = new();
     private bool _isProcessing = false;
+
+    private UserDto? SelectedUser;
+    private List<UserDto> SelectedUsers = new();
 
     private async Task HandleSubmit()
     {
@@ -88,4 +147,77 @@
             _isProcessing = false;
         }
     }
+
+    private async Task<IEnumerable<UserDto>> SearchUsers(string searchText, CancellationToken token)
+    {
+        try
+        {
+            var response = await UserService.SearchByName(searchText, 10);
+            return response.Users;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ошибка поиска: {ex.Message}", Severity.Error);
+            return Enumerable.Empty<UserDto>();
+        }
+    }
+
+    private async Task OnUserSelected(UserDto user)
+    {
+        SelectedUser = user;
+
+        if (user == null)
+            return;
+
+        if (_projectRequest.ProjectMembers.Any(m => m.UserId == user.Id))
+        {
+            Snackbar.Add("Пользователь уже добавлен в проект", Severity.Warning);
+            return;
+        }
+
+        _projectRequest.ProjectMembers!.Add(new ProjectMemberRequest
+            {
+                UserId = user.Id,
+                ProjectRole = ProjectRole.Guest
+            });
+
+        SelectedUsers.Add(user);
+
+        StateHasChanged();
+    }
+
+    private void RemoveMember(Guid userId)
+    {
+        var member = _projectRequest.ProjectMembers.FirstOrDefault(m => m.UserId == userId);
+        if (member != null)
+        {
+            _projectRequest.ProjectMembers.Remove(member);
+        }
+
+        var user = SelectedUsers.FirstOrDefault(u => u.Id == userId);
+        if (user != null)
+        {
+            SelectedUsers.Remove(user);
+        }
+
+        StateHasChanged();
+    }
+
+    private string GetUserName(Guid userId)
+    {
+        return SelectedUsers.FirstOrDefault(u => u.Id == userId)?.UserName ?? "Неизвестный пользователь";
+    }
+
+    private string GetRoleIcon(ProjectRole role)
+    {
+        return role switch
+        {
+            ProjectRole.ScrumMaster => Icons.Material.Filled.EmojiPeople,
+            ProjectRole.ProductOwner => @Icons.Material.Filled.Hail,
+            ProjectRole.Developer => Icons.Material.Filled.Code,
+            ProjectRole.Guest => Icons.Material.Filled.Person,
+            _ => Icons.Material.Filled.Help
+        };
+    }
 }
+

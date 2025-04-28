@@ -13,16 +13,15 @@ public class ProjectTask
 
     public DateTime CreatedDate { get; set; }
 
-    public int? StoryPoint { get; set; }
-
     public DateTime? EndDate { get; set; }
 
     public Guid IdUserCreated { get; set; }
 
     public User UserCreated { get; set; } = default!;
 
-    [JsonIgnore]
-    public ICollection<User>? ResponsebleUsers { get; set; }
+    public Guid AssigneeId { get; set; }
+
+    public User Assignee { get; set; }
 
     public Project Project { get; set; }
 
@@ -31,4 +30,8 @@ public class ProjectTask
     public Priority Priority { get; set; }
 
     public Enums.TaskStatus Status { get; set; }
+
+    public ICollection<CheckList>? CheckList { get; set; }
+
+    public ICollection<Comment>? Comments { get; set; }
 }

@@ -33,7 +33,8 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
 
         var user = new User
         {
-            UserName = command.UserName,
+            FirstName = command.FirstName,
+            LastName = command.LastName,
             Email = command.Email,
         };
 

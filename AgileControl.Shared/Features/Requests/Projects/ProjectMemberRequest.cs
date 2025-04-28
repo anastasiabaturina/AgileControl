@@ -4,5 +4,8 @@ public class ProjectMemberRequest
 {
     public Guid UserId { get; set; }
 
-    public int? ProjectRole { get; set; }
+    public ProjectRole? ProjectRole { get; set; }
+
+    public string? UserName { get; set; }
+    public string? Email { get; set; }
 }

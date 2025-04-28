@@ -19,13 +19,13 @@ public class AuthenticationService : IAuthenticationService
         _localStorage = localStorage;
     }
 
-    public async Task<string> RegisterAsync(string email, string userName, string password)
+    public async Task<string> RegisterAsync(string email, string firstName, string lastName, string password)
     {
-        Console.WriteLine($"Отправка запроса на регистрацию: {email}, {userName}");
         var requestBody = new RegisterUserRequest
         {
             Email = email,
-            UserName = userName,
+            FirstName = firstName,
+            LastName = lastName,
             Password = password
         };
 
@@ -33,7 +33,7 @@ public class AuthenticationService : IAuthenticationService
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadFromJsonAsync<Response<RegisterUserCommandResponse>>();
-            await AuthenticateAsync(result.Data.Token); // Предполагая, что токен лежит в поле Token
+            await AuthenticateAsync(result.Data.Token);
             return result.Data.Token;
         }
 
