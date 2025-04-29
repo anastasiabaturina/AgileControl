@@ -9,6 +9,8 @@ public class RegisterUserCommand : IRequest<RegisterUserCommandResponse>
 
     public string FirstName { get; set; } =default!;
 
+    public string NickName { get; set; } = default!;
+
     public string LastName { get; set; } = default!;
 
     public string Password { get; set; } = default!;

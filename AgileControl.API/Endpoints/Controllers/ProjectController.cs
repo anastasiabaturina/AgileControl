@@ -1,4 +1,4 @@
-﻿using AgileControl.API.Extrnsions;
+﻿using AgileControl.API.Extensions;
 using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.ProjectsFeatures.Commands.Create;
 using AgileControl.Applicaion.Features.ProjectsFeatures.Queries.GetInfoProgect;

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace AgileControl.API.Extrnsions;
+namespace AgileControl.API.Extensions;
 
 public static class HttpContextExtensions
 {

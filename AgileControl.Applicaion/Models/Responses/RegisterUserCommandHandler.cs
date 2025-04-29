@@ -34,6 +34,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
         var user = new User
         {
             FirstName = command.FirstName,
+            UserName = command.NickName,
             LastName = command.LastName,
             Email = command.Email,
         };

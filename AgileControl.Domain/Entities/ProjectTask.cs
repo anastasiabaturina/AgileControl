@@ -1,5 +1,4 @@
 ﻿using AgileControl.Domain.Enums;
-using System.Text.Json.Serialization;
 
 namespace AgileControl.Domain.Entities;
 
@@ -29,7 +28,7 @@ public class ProjectTask
 
     public Priority Priority { get; set; }
 
-    public Enums.TaskStatus Status { get; set; }
+    public Status Status { get; set; }
 
     public ICollection<CheckList>? CheckList { get; set; }
 

@@ -1,6 +1,4 @@
-﻿using AgileControl.Domain.Entities;
-
-namespace AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
+﻿namespace AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
 
 public class RegisterUserCommandResponse
 {

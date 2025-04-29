@@ -1,0 +1,70 @@
+﻿@using AgileControl.Applicaion.Models.Dtos
+@using AgileControl.Domain.Enums
+@using MudBlazor
+
+<div class="kanban-column @Class" style="@Style">
+    <MudPaper Elevation="1" Class="pa-3 mb-2">
+        <div class="d-flex align-center justify-space-between">
+            <MudText Typo="Typo.h6">@Status.ToString()</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Add"
+                           Size="Size.Small"
+                           OnClick="@(() => _showAddDialog = true)" />
+        </div>
+    </MudPaper>
+
+    <MudDropZone T="TaskDto"
+                 Items="@Tasks"
+                 ItemDropped="@OnItemDropped"
+                 Class="kanban-drop-zone">
+        <ChildContent>
+            @foreach (var task in Tasks)
+            {
+                <KanbanCard Task="task"
+                            OnStatusChanged="OnStatusChanged"
+                            Class="mb-2" />
+            }
+        </ChildContent>
+    </MudDropZone>
+
+    <MudDialog @bind-IsVisible="_showAddDialog">
+        <DialogContent>
+            <MudTextField @bind-Value="_newTaskTitle" Label="Название задачи" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Text" OnClick="@(() => _showAddDialog = false)">Отмена</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@AddTask">Добавить</MudButton>
+        </DialogActions>
+    </MudDialog>
+</div>
+
+@code {
+    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public string Style { get; set; } = string.Empty;
+    [Parameter] public Status Status { get; set; }
+    [Parameter] public List<TaskDto> Tasks { get; set; } = new();
+    [Parameter] public EventCallback<string> OnTaskCreated { get; set; }
+    [Parameter] public EventCallback<(Guid taskId, Status newStatus)> OnStatusChanged { get; set; }
+
+    private bool _showAddDialog;
+    private string _newTaskTitle = string.Empty;
+
+    private void OnItemDropped(TaskDto item)
+    {
+        OnStatusChanged.InvokeAsync((item.Id, Status));
+    }
+
+    private async Task HandleStatusChanged(Guid taskId, Status newStatus)
+    {
+        await OnStatusChanged.InvokeAsync((taskId, newStatus));
+    }
+
+    private async Task AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(_newTaskTitle))
+        {
+            await OnTaskCreated.InvokeAsync(_newTaskTitle);
+            _newTaskTitle = string.Empty;
+            _showAddDialog = false;
+        }
+    }
+}

@@ -1,6 +1,7 @@
 ﻿using AgileControl.Applicaion.Features.ProjectsFeatures.Commands.Create;
 using AgileControl.Applicaion.Features.ProjectsFeatures.Queries.GetInfoProgect;
 using AgileControl.Applicaion.Features.TasksFeatures.Commands.Create;
+using AgileControl.Applicaion.Features.TasksFeatures.Commands.UpdateStatus;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Login;
 using AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
 using AgileControl.Applicaion.Models.Dtos;
@@ -9,7 +10,7 @@ using AgileControl.Shared.Features.Requests.Auth;
 using AgileControl.Shared.Features.Requests.Projects;
 using AgileControl.Shared.Features.Requests.Tasks;
 using AutoMapper;
-using TaskStatus = AgileControl.Domain.Enums.TaskStatus;
+using Status = AgileControl.Domain.Enums.Status;
 
 namespace AgileControl.Applicaion.Mapper;
 
@@ -21,6 +22,7 @@ public class ApiMappingProfile : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+            .ForMember(dest => dest.NickName, opt => opt.MapFrom(src => src.NickName))
             .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
 
         CreateMap<LoginUserRequest, LoginUserCommand>()
@@ -74,7 +76,7 @@ public class ApiMappingProfile : Profile
             .ForMember(dest => dest.AssigneeId, opt => opt.MapFrom(src => src.AssigneeId))
             .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))  
             .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => TaskStatus.Backlog))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => Status.Backlog))
             .ForMember(dest => dest.CheckList, opt => opt.MapFrom(src => src.CheckLists));
 
         CreateMap<CheckListRequest, CheckListDto>()

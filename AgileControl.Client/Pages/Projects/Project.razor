@@ -68,14 +68,8 @@
                            Color="Color.Primary"
                            StartIcon="@Icons.Material.Filled.List"
                            OnClick="@(() => Navigation.NavigateTo($"/projects/{_project.Id}/tasks"))">
-                    Бэклог проекта
-                </MudButton>
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Material.Filled.List"
-                           OnClick="@(() => Navigation.NavigateTo($"/projects/{_project.Id}/sprints/tasks"))">
-                    Бэклог спринта
-                </MudButton>
+                    Задачи проекта
+                </MudButton>    
             </div>
         </MudPaper>
 
@@ -127,7 +121,6 @@
         { ProjectRole.Guest, "Гость" },
     };
 
-    // Метод для получения текста роли
     private string GetRoleText(ProjectRole? role)
     {
         if (role.HasValue && ProjectRoleDictionary.ContainsKey(role.Value))

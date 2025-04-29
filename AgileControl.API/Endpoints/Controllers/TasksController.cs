@@ -1,9 +1,10 @@
-﻿using AgileControl.API.Extrnsions;
+﻿using AgileControl.API.Extensions;
 using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.TasksFeatures.Commands.Create;
 using AgileControl.Applicaion.Features.TasksFeatures.Commands.UpdateStatus;
 using AgileControl.Applicaion.Features.TasksFeatures.Queries.Status;
 using AgileControl.Applicaion.Models.Dtos;
+using AgileControl.Domain.Enums;
 using AgileControl.Shared.Features.Requests.Tasks;
 using AutoMapper;
 using MediatR;
@@ -28,12 +29,13 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(CreateTaskRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAsync(
+       [FromBody] CreateTaskRequest request, 
+       CancellationToken cancellationToken)
     {
         var userCreatedId = HttpContext.GetUserId();
 
         var command = _mapper.Map<CreateTaskCommand>(request);
-
         command.IdUserCreated = userCreatedId;
 
         var result = await _mediator.Send(command, cancellationToken);
@@ -43,17 +45,23 @@ public class TasksController : ControllerBase
             Data = result
         };
 
-        var location = Url.Action(nameof(CreateAsync));
-
+        var location = Url.Action(nameof(CreateAsync), new { id = result.TaskId });
         return Created(location!, response);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetByStatus(Guid projectId, Domain.Enums.TaskStatus status)
+    [HttpGet("projects/{projectId}/status/{status}")] 
+    public async Task<IActionResult> GetByStatus(
+        [FromRoute] Guid projectId,
+        [FromRoute] Status status,
+        CancellationToken cancellationToken) 
     {
-        var query = new GetTasksByStatusQuery(projectId, status);
+        var query = new GetTasksByStatusQuery
+        {
+            ProjectId = projectId,
+            Status = _mapper.Map<Domain.Enums.Status>(status)
+        };
 
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         var response = new Response<IReadOnlyList<TaskDto>>
         {
@@ -64,7 +72,10 @@ public class TasksController : ControllerBase
     }
 
     [HttpPatch("{taskId}/status")]
-    public async Task<IActionResult> UpdateStatus([FromRoute]Guid taskId, [FromBody] Domain.Enums.TaskStatus status)
+    public async Task<IActionResult> UpdateStatus(
+        [FromRoute] Guid taskId,
+        [FromQuery] Status status,
+        CancellationToken cancellationToken)
     {
         var command = new UpdateStatusCommand
         {
@@ -72,7 +83,7 @@ public class TasksController : ControllerBase
             Status = status
         };
 
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         var response = new Response<UpdateStatusResponse>
         {

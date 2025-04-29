@@ -1,6 +1,6 @@
 ﻿namespace AgileControl.Domain.Enums;
 
-public enum TaskStatus
+public enum Status
 {
     Backlog,
     InProgress,
