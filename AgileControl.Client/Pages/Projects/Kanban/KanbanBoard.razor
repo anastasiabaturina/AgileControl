@@ -1,4 +1,4 @@
-﻿@using AgileControl.Applicaion.Models.Dtos
+﻿@* @* @* @using AgileControl.Applicaion.Models.Dtos
 @using AgileControl.Domain.Enums
 @using MudBlazor
 
@@ -16,39 +16,8 @@
     }
 </MudGrid>
 
-@code {
-    private List<TaskDto> Tasks = new()
-    {
-        new TaskDto { Id = Guid.NewGuid(), Title = "Создать проект", Description = "Начальная задача", Status = Status.Backlog },
-        new TaskDto { Id = Guid.NewGuid(), Title = "Дизайн UI", Status = Status.InProgress },
-        new TaskDto { Id = Guid.NewGuid(), Title = "Тестирование", Status = Status.Done }
-    };
-
-    private List<TaskDto> GetTasksByStatus(Status status) => Tasks.Where(t => t.Status == status).ToList();
-
-    private async Task AddTaskAsync(string title)
-    {
-        Tasks.Add(new TaskDto
-            {
-                Id = Guid.NewGuid(),
-                Title = title,
-                Status = Status.Backlog
-            });
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task UpdateTaskStatusAsync((Guid taskId, Status newStatus) update)
-    {
-        var task = Tasks.FirstOrDefault(t => t.Id == update.taskId);
-        if (task != null)
-        {
-            task.Status = update.newStatus;
-        }
-        await InvokeAsync(StateHasChanged);
-    }
-}
-
-
+@* @code { *@
+    
 @* @page "/projects/{ProjectId:guid}/tasks"
 
 @using AgileControl.Applicaion.Models.Dtos
@@ -79,6 +48,38 @@
         </div>
     }
 </MudPaper>
+
+private List<TaskDto> Tasks = new()
+    {
+        new TaskDto { Id = Guid.NewGuid(), Title = "Создать проект", Description = "Начальная задача", Status = Status.Backlog },
+        new TaskDto { Id = Guid.NewGuid(), Title = "Дизайн UI", Status = Status.InProgress },
+        new TaskDto { Id = Guid.NewGuid(), Title = "Тестирование", Status = Status.Done }
+    };
+
+    private List<TaskDto> GetTasksByStatus(Status status) => Tasks.Where(t => t.Status == status).ToList();
+
+    private async Task AddTaskAsync(string title)
+    {
+        Tasks.Add(new TaskDto
+            {
+                Id = Guid.NewGuid(),
+                Title = title,
+                Status = Status.Backlog
+            });
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task UpdateTaskStatusAsync((Guid taskId, Status newStatus) update)
+    {
+        var task = Tasks.FirstOrDefault(t => t.Id == update.taskId);
+        if (task != null)
+        {
+            task.Status = update.newStatus;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+}
+
 
 @code {
     private Dictionary<Status, List<TaskDto>> _tasksByStatus = new();

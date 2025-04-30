@@ -3,9 +3,9 @@ using MediatR;
 
 namespace AgileControl.Applicaion.Features.TasksFeatures.Commands.UpdateStatus;
 
-public class UpdateStatusCommand : IRequest<UpdateStatusResponse>
+public class UpdateColumnTaskCommand : IRequest<UpdateColumnTaskResponse>
 {
     public Guid TaskId { get; set; }
 
-    public Status Status { get; set; }
+    public Guid ColumnId { get; set; }
 }

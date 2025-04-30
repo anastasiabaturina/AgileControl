@@ -19,13 +19,12 @@ public class AuthenticationService : IAuthenticationService
         _localStorage = localStorage;
     }
 
-    public async Task<string> RegisterAsync(string email, string firstName, string lastName, string nickName, string password)
+    public async Task<string> RegisterAsync(string email, string firstName, string lastName, string password)
     {
         var requestBody = new RegisterUserRequest
         {
             Email = email,
             FirstName = firstName,
-            NickName = nickName,
             LastName = lastName,
             Password = password
         };

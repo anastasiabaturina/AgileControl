@@ -18,13 +18,20 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
     public DbSet<ProjectTask> ProjectTasks { get; set; } 
 
-    public DbSet<Sprint> Sprints { get; set; }
+    public DbSet<KanbanColumn> Columns { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        builder.Entity<User>(entity =>
+        {
+            entity.Ignore(u => u.UserName);  // Игнорируем UserName
+            entity.Property(u => u.Email).IsRequired(); // Делаем Email обязательным
+        });
+
 
     }
 }

@@ -23,7 +23,4 @@ public class Project
 
     [JsonIgnore]
     public ICollection<ProjectMember> ProgectMembers { get; set; }
-
-    [JsonIgnore]
-    public ICollection<Sprint> Sprints { get; set; }
 }

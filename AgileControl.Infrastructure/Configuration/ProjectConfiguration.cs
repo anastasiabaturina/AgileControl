@@ -30,10 +30,6 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .WithOne(pm => pm.Project)
             .HasForeignKey(pm => pm.PojectId);
 
-        builder.HasMany(p => p.Sprints)
-            .WithOne(s => s.Project)
-            .HasForeignKey(s => s.ProjectId);
-
         builder.Property(p => p.CreatedDate)
             .IsRequired()
             .HasDefaultValueSql("CURRENT_TIMESTAMP");

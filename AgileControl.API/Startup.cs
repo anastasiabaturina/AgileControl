@@ -38,7 +38,11 @@ public class Startup
                 .EnableSensitiveDataLogging()
                 .LogTo(Console.WriteLine, LogLevel.Information));
 
-        services.AddIdentity<User, Role>()
+        services.AddIdentity<User, Role>(options =>
+        {
+            options.User.RequireUniqueEmail = true;  // Используем Email как уникальный идентификатор
+            options.User.AllowedUserNameCharacters = string.Empty;
+        })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         var jwtSettings = Configuration.GetSection("JWTSettings");

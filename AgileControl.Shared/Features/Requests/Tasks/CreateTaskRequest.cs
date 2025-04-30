@@ -14,5 +14,7 @@ public class CreateTaskRequest
 
     public Priority Priority { get; set; }
 
-    public List<CheckListRequest> CheckLists { get; set; }
+    public Guid ColumnId { get; set; }
+
+    public List<CheckListRequest>? CheckLists { get; set; }
 }

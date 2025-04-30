@@ -1,6 +1,5 @@
 ﻿using AgileControl.API.Models.Exceptions;
 using AgileControl.Domain.Entities;
-using Humanizer.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -34,9 +33,9 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
         var user = new User
         {
             FirstName = command.FirstName,
-            UserName = command.NickName,
             LastName = command.LastName,
-            Email = command.Email,
+            UserName = command.Email,
+            Email = command.Email
         };
 
         var result = await _userManager.CreateAsync(user, command.Password);

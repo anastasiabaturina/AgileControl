@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgileControl.Applicaion.Features.TasksFeatures.Commands.UpdateStatus;
 
-public class UpdateStatusCommandHandler : IRequestHandler<UpdateStatusCommand, UpdateStatusResponse>
+public class UpdateColumnTaskCommandHandler : IRequestHandler<UpdateColumnTaskCommand, UpdateColumnTaskResponse>
 {
     private readonly ApplicationDbContext _context;
 
-    public UpdateStatusCommandHandler(ApplicationDbContext context)
+    public UpdateColumnTaskCommandHandler(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task<UpdateStatusResponse> Handle(UpdateStatusCommand command, CancellationToken cancellationToken)
+    public async Task<UpdateColumnTaskResponse> Handle(UpdateColumnTaskCommand command, CancellationToken cancellationToken)
     {
         var task = await _context.ProjectTasks
             .FirstOrDefaultAsync(t => t.Id == command.TaskId, cancellationToken);
@@ -24,11 +24,11 @@ public class UpdateStatusCommandHandler : IRequestHandler<UpdateStatusCommand, U
             throw new BadRequestException("Задачи не сущесвует");
         }
 
-        task.Status = command.Status;
+        task.KanbanColumnId = command.ColumnId;
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new UpdateStatusResponse()
+        return new UpdateColumnTaskResponse()
         {
             TaskId = task.Id,
         };

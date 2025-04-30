@@ -13,7 +13,6 @@
         <MudTextField @bind-Value="Email" Label="Email" Variant="Variant.Filled" Required="true" />
         <MudTextField @bind-Value="FirstName" Label="Имя" Variant="Variant.Filled" Required="true" />
         <MudTextField @bind-Value="LastName" Label="Фамилия" Variant="Variant.Filled" Required="true" />
-        <MudTextField @bind-Value="NickName" Label="Nickname" Variant="Variant.Filled" Required="true" />
         <MudTextField @bind-Value="Password" Label="Пароль" Type="password" Variant="Variant.Filled" Required="true" />
         <MudTextField @bind-Value="ConfirmPassword" Label="Подтверждение пароля" Type="password" Variant="Variant.Filled" Required="true" />
 
@@ -29,7 +28,6 @@
     public string Email { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public string NickName { get; set; }
     public string Password { get; set; }
     public string ConfirmPassword { get; set; }
 
@@ -44,7 +42,7 @@
 
         try
         {
-            var token = await AuthenticationService.RegisterAsync(Email, FirstName, LastName, NickName, Password);
+            var token = await AuthenticationService.RegisterAsync(Email, FirstName, LastName, Password);
 
             if (!string.IsNullOrEmpty(token))
             {

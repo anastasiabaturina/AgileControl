@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Column\Commands\Remove\" />
+    <Folder Include="Features\Column\Commands\Update\" />
     <Folder Include="Features\SprintFeatures\Commands\" />
     <Folder Include="Features\SprintFeatures\Queries\" />
   </ItemGroup>

@@ -4,9 +4,9 @@ using System;
 
 namespace AgileControl.Applicaion.Features.TasksFeatures.Queries.Status;
 
-public class GetTasksByStatusQuery : IRequest<IReadOnlyList<TaskDto>>
+public class GetTasksByStatusQuery : IRequest<GetTaskByColumnResponse>
 {
     public Guid ProjectId { get; set; }
 
-    public Domain.Enums.Status Status { get; set; }
+    public Guid Columnid { get; set; }
 }

@@ -28,9 +28,11 @@ public class ProjectTask
 
     public Priority Priority { get; set; }
 
-    public Status Status { get; set; }
-
     public ICollection<CheckList>? CheckList { get; set; }
 
     public ICollection<Comment>? Comments { get; set; }
+
+    public Guid KanbanColumnId { get; set; }
+    
+    public KanbanColumn KanbanColumn { get; set; } = default!;
 }

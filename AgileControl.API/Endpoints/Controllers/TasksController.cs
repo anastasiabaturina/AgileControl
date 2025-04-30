@@ -3,8 +3,6 @@ using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.TasksFeatures.Commands.Create;
 using AgileControl.Applicaion.Features.TasksFeatures.Commands.UpdateStatus;
 using AgileControl.Applicaion.Features.TasksFeatures.Queries.Status;
-using AgileControl.Applicaion.Models.Dtos;
-using AgileControl.Domain.Enums;
 using AgileControl.Shared.Features.Requests.Tasks;
 using AutoMapper;
 using MediatR;
@@ -30,7 +28,7 @@ public class TasksController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
-       [FromBody] CreateTaskRequest request, 
+       [FromBody] CreateTaskRequest request,
        CancellationToken cancellationToken)
     {
         var userCreatedId = HttpContext.GetUserId();
@@ -49,21 +47,21 @@ public class TasksController : ControllerBase
         return Created(location!, response);
     }
 
-    [HttpGet("projects/{projectId}/status/{status}")] 
+    [HttpGet("projects/{projectId}/status/{status}")]
     public async Task<IActionResult> GetByStatus(
         [FromRoute] Guid projectId,
-        [FromRoute] Status status,
-        CancellationToken cancellationToken) 
+        [FromRoute] Guid columnId,
+        CancellationToken cancellationToken)
     {
         var query = new GetTasksByStatusQuery
         {
             ProjectId = projectId,
-            Status = _mapper.Map<Domain.Enums.Status>(status)
+            Columnid = columnId
         };
 
         var result = await _mediator.Send(query, cancellationToken);
 
-        var response = new Response<IReadOnlyList<TaskDto>>
+        var response = new Response<GetTaskByColumnResponse>
         {
             Data = result
         };
@@ -71,21 +69,21 @@ public class TasksController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPatch("{taskId}/status")]
+    [HttpPatch("{taskId}/columns/{columnId}")]
     public async Task<IActionResult> UpdateStatus(
         [FromRoute] Guid taskId,
-        [FromQuery] Status status,
+        [FromRoute] Guid columnId,
         CancellationToken cancellationToken)
     {
-        var command = new UpdateStatusCommand
+        var command = new UpdateColumnTaskCommand
         {
             TaskId = taskId,
-            Status = status
+            ColumnId = columnId
         };
 
         var result = await _mediator.Send(command, cancellationToken);
 
-        var response = new Response<UpdateStatusResponse>
+        var response = new Response<UpdateColumnTaskResponse>
         {
             Data = result
         };

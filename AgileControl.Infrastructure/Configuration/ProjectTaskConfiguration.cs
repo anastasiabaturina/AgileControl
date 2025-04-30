@@ -59,12 +59,6 @@ public class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
             .HasConversion<int>()
             .IsRequired();
 
-        builder.Property(t => t.Status)
-            .HasConversion<int>()
-            .IsRequired();
-
-        // Индексы для оптимизации запросов
-        builder.HasIndex(t => t.Status);
         builder.HasIndex(t => t.Priority);
         builder.HasIndex(t => t.ProjectId);
         builder.HasIndex(t => t.AssigneeId);

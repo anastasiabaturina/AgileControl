@@ -2,7 +2,7 @@
 
 public interface IAuthenticationService
 {
-    Task<string> RegisterAsync(string email, string firstName, string lastName, string nickName, string password);
+    Task<string> RegisterAsync(string email, string firstName, string lastName, string password);
 
     Task<string> LoginAsync(string email, string password);
 
