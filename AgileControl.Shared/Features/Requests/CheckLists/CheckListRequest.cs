@@ -1,4 +1,4 @@
-﻿namespace AgileControl.Shared.Features.Requests.Tasks;
+﻿namespace AgileControl.Shared.Features.Requests.CheckLists;
 
 public class CheckListRequest
 {

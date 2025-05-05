@@ -7,4 +7,6 @@ public class CheckListDto
     public string Text { get; set; } = default!;
 
     public bool IsCompleted { get; set; }
+
+    public DateTime CreatedDate { get; set; }
 }

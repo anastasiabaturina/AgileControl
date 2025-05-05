@@ -23,6 +23,4 @@ public class CreateTaskCommand : IRequest<CreateTaskResponse>
     public Guid ColumnId { get; set; }
 
     public Priority Priority { get; set; }
-
-    public List<CheckListDto> CheckLists { get; set; }
 }

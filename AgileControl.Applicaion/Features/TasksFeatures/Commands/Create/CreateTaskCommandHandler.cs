@@ -26,7 +26,10 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Creat
         var projectExists = await _context.Projects
             .AnyAsync(p => p.Id == command.ProjectId, cancellationToken);
 
-        //нужно проверять существует ли проект
+        if (!projectExists)
+        {
+            throw new BadRequestException($"Проект с ID {command.ProjectId} не найден");
+        }
 
         var task = _mapper.Map<ProjectTask>(command);
         task.UserCreated = await _userManager.FindByIdAsync(command.IdUserCreated.ToString());
@@ -41,29 +44,12 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Creat
             task.Assignee = assignee;
         }
 
-        
-
-        await _context.ProjectTasks.AddAsync(task, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        if (command.CheckLists != null && command.CheckLists.Any())
-        {
-            task.CheckList = command.CheckLists
-                .Select(item => new CheckList
-                {
-                    Text = item.Text,
-                    IsCompleted = false,
-                    CreatedDate = DateTime.UtcNow,
-                })
-                .ToList();
-        }
-        // ошибка в сохранении позадач поэтому нужно сначала сохранять задачу а потом отдельно подзадачи либо сделать отдельный контроллер специальный для чек-листов 
+        _context.ProjectTasks.Add(task);
         await _context.SaveChangesAsync(cancellationToken);
 
         return new CreateTaskResponse
         {
             TaskId = task.Id,
         };
-    }Microsoft.EntityFrameworkCore.DbUpdateException: "An error occurred while saving the entity changes. See the inner exception for details."
-
+    }
 }

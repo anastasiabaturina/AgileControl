@@ -12,7 +12,6 @@ namespace AgileControl.API.Endpoints.Controllers;
 [Route("api/v1/boards")]
 [ApiController]
 [Authorize]
-
 public class KanbanBoardController : ControllerBase
 {
     private readonly IMapper _mapper;

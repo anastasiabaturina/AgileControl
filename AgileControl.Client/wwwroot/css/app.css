@@ -101,3 +101,30 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+.drop-zone {
+    min-height: 200px;
+    padding: 15px;
+    border: 2px dashed transparent;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+    .drop-zone.drag-over {
+        border-color: #007bff;
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+
+.kanban-task {
+    margin-bottom: 10px;
+    cursor: grab;
+    user-select: none;
+}
+
+    .kanban-task:active {
+        cursor: grabbing;
+    }
+
+.tasks-list {
+    min-height: 100px;
+}

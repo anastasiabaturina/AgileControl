@@ -37,7 +37,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginUs
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Email)
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
 
         var jwtSettings = _configuration.GetSection("JWTSettings");

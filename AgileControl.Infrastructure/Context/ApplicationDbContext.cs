@@ -20,6 +20,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
     public DbSet<KanbanColumn> Columns { get; set; }
 
+    public DbSet<CheckList> CheckLists { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -28,8 +30,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
         builder.Entity<User>(entity =>
         {
-            entity.Ignore(u => u.UserName);  // Игнорируем UserName
-            entity.Property(u => u.Email).IsRequired(); // Делаем Email обязательным
+            entity.Ignore(u => u.UserName);  
+            entity.Property(u => u.Email).IsRequired(); 
         });
 
 

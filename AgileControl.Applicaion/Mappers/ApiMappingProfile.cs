@@ -1,4 +1,5 @@
-﻿using AgileControl.Applicaion.Features.Kanban.Commands.Create;
+﻿using AgileControl.Applicaion.Features.CheckListsFeature.Command.Create;
+using AgileControl.Applicaion.Features.Kanban.Commands.Create;
 using AgileControl.Applicaion.Features.ProjectsFeatures.Commands.Create;
 using AgileControl.Applicaion.Features.ProjectsFeatures.Queries.GetInfoProgect;
 using AgileControl.Applicaion.Features.TasksFeatures.Commands.Create;
@@ -7,6 +8,7 @@ using AgileControl.Applicaion.Features.UsersFeatures.Command.Register;
 using AgileControl.Applicaion.Models.Dtos;
 using AgileControl.Domain.Entities;
 using AgileControl.Shared.Features.Requests.Auth;
+using AgileControl.Shared.Features.Requests.CheckLists;
 using AgileControl.Shared.Features.Requests.Columns;
 using AgileControl.Shared.Features.Requests.Projects;
 using AgileControl.Shared.Features.Requests.Tasks;
@@ -57,7 +59,6 @@ public class ApiMappingProfile : Profile
             .ForMember(dest => dest.ColumnId, opt => opt.MapFrom(src => src.ColumnId))
             .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))  
             .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority))  
-            .ForMember(dest => dest.CheckLists, opt => opt.MapFrom(src => src.CheckLists)) 
              .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src =>
                 src.EndDate.HasValue
                     ? DateTime.SpecifyKind(src.EndDate.Value, DateTimeKind.Utc)
@@ -75,8 +76,11 @@ public class ApiMappingProfile : Profile
             .ForMember(dest => dest.IdUserCreated, opt => opt.MapFrom(src => src.IdUserCreated))
             .ForMember(dest => dest.AssigneeId, opt => opt.MapFrom(src => src.AssigneeId))
             .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
-            .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority))
-            .ForMember(dest => dest.CheckList, opt => opt.MapFrom(src => src.CheckLists));
+            .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority));
+
+        CreateMap<CreateCheckListsRequest, CreateCheckListCommand>()
+            .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.TaskId))
+            .ForMember(dest => dest.CheckLists, opt => opt.MapFrom(src => src.CheckLists));
 
         CreateMap<CheckListRequest, CheckListDto>()
             .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text));
