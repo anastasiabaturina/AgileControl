@@ -6,4 +6,6 @@ namespace AgileControl.Applicaion.Features.Kanban.Commands.Create;
 public  class CreateColumnCommand : IRequest<CreateColumnResponse>
 {
     public string Title { get; set; } = default!;
+
+    public Guid ProjectId { get; set; }
 }

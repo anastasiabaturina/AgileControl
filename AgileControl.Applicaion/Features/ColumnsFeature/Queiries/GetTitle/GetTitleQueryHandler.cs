@@ -1,4 +1,5 @@
-﻿using AgileControl.Infrastructure.Context;
+﻿using AgileControl.Applicaion.Models.Dtos;
+using AgileControl.Infrastructure.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,12 +16,18 @@ public class GetTitleQueryHandler : IRequestHandler<GetTitleQuery, GetTitleRespo
 
     public async Task<GetTitleResponse> Handle(GetTitleQuery query, CancellationToken cancellationToken)
     {
-        var title = await _context.Columns
-            .FirstOrDefaultAsync(c => c.Id == query.ColumnId, cancellationToken);
+        var columns = await _context.Columns
+            .Where(c => c.ProjectId == query.ProjectId)
+            .Select(t => new ColumnDto
+            {
+                ColumnName = t.Title,
+                ColumnId = t.Id
+            })
+            .ToListAsync(cancellationToken);
 
         return new GetTitleResponse
         {
-            Title = title.Title
+            Columns = columns
         };
     }
 }

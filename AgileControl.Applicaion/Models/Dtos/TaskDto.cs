@@ -19,5 +19,11 @@ public class TaskDto
 
     public Priority Priority { get; set; }
 
-    public List<CheckListDto>? CheckList { get; set; }
+    public Guid? ColumnId { get; set; }
+
+    public TaskDto(string title, Guid? columnId)
+    {
+        Title = title;
+        ColumnId = columnId;
+    }
 }

@@ -20,7 +20,7 @@ public class CreateTaskCommand : IRequest<CreateTaskResponse>
 
     public Guid ProjectId { get; set; }
 
-    public Guid ColumnId { get; set; }
+    public Guid? ColumnId { get; set; }
 
     public Priority Priority { get; set; }
 }

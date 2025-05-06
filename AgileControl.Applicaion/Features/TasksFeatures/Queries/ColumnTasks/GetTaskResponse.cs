@@ -2,7 +2,7 @@
 
 namespace AgileControl.Applicaion.Features.TasksFeatures.Queries.Status;
 
-public class GetTaskByColumnResponse
+public class GetTaskResponse
 {
     public List<TaskDto> Tasks { get; set; }
 }

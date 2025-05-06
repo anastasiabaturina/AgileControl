@@ -26,7 +26,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .WithOne()
             .HasForeignKey(pt => pt.ProjectId);
 
-        builder.HasMany(p => p.ProgectMembers)
+        builder.HasMany(p => p.ProjectMembers)
             .WithOne(pm => pm.Project)
             .HasForeignKey(pm => pm.PojectId);
 

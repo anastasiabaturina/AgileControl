@@ -40,12 +40,12 @@ public class KanbanBoardController : ControllerBase
         return Created(location!, response);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetTitleAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+    [HttpGet("projects/{projectId}")]
+    public async Task<IActionResult> GetTitleAsync([FromRoute] Guid projectId, CancellationToken cancellationToken)
     {
         var query = new GetTitleQuery
         {
-            ColumnId = id
+            ProjectId = projectId
         };
 
         var result = await _mediator.Send(query, cancellationToken);

@@ -47,21 +47,19 @@ public class TasksController : ControllerBase
         return Created(location!, response);
     }
 
-    [HttpGet("projects/{projectId}/status/{status}")]
-    public async Task<IActionResult> GetByStatus(
+    [HttpGet("projects/{projectId}")]
+    public async Task<IActionResult> Get(
         [FromRoute] Guid projectId,
-        [FromRoute] Guid columnId,
         CancellationToken cancellationToken)
     {
-        var query = new GetTasksByStatusQuery
+        var query = new GetTasksQuery
         {
             ProjectId = projectId,
-            Columnid = columnId
         };
 
         var result = await _mediator.Send(query, cancellationToken);
 
-        var response = new Response<GetTaskByColumnResponse>
+        var response = new Response<GetTaskResponse>
         {
             Data = result
         };

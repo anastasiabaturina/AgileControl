@@ -1,6 +1,8 @@
-﻿namespace AgileControl.Applicaion.Features.Column.Queiries.GetTitle;
+﻿using AgileControl.Applicaion.Models.Dtos;
+
+namespace AgileControl.Applicaion.Features.Column.Queiries.GetTitle;
 
 public class GetTitleResponse
 {
-    public string Title { get; set; } = default!;
+    public List<ColumnDto> Columns { get; set; }
 }

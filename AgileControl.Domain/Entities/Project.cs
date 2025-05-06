@@ -22,5 +22,8 @@ public class Project
     public ICollection<ProjectTask> Tasks { get; set; }
 
     [JsonIgnore]
-    public ICollection<ProjectMember> ProgectMembers { get; set; }
+    public ICollection<KanbanColumn> Columns { get; set; }
+
+    [JsonIgnore]
+    public ICollection<ProjectMember> ProjectMembers { get; set; }
 }

@@ -16,7 +16,7 @@ public class ProjectMemberConfiguration : IEntityTypeConfiguration<ProjectMember
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(pm => pm.Project)
-            .WithMany(p => p.ProgectMembers)
+            .WithMany(p => p.ProjectMembers)
             .HasForeignKey(pm => pm.PojectId)
             .OnDelete(DeleteBehavior.Cascade);
 

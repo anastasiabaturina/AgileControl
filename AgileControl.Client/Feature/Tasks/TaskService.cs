@@ -1,11 +1,10 @@
 ﻿using AgileControl.API.Models.Responses;
-using AgileControl.Applicaion.Features.TasksFeatures.Commands.Create;
-using AgileControl.Applicaion.Features.TasksFeatures.Commands.UpdateStatus;
+using AgileControl.Applicaion.Features.Column.Queiries.GetTitle;
+using AgileControl.Applicaion.Features.Kanban.Commands.Create;
+using AgileControl.Applicaion.Features.TasksFeatures.Queries.Status;
 using AgileControl.Applicaion.Models.Dtos;
 using AgileControl.Client.Interfaces;
-using AgileControl.Domain.Enums;
-using AgileControl.Shared.Features.Requests.Tasks;
-using System.Net.Http;
+using AgileControl.Shared.Features.Requests.Columns;
 using System.Net.Http.Json;
 
 namespace AgileControl.Client.Feature.Tasks;
@@ -13,60 +12,74 @@ namespace AgileControl.Client.Feature.Tasks;
 public class TaskService : ITaskService
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<TaskService> _logger;
 
-    public TaskService(HttpClient httpClient, ILogger<TaskService> logger)
+    public TaskService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _logger = logger;
     }
 
-    public async Task<IReadOnlyList<TaskDto>> GetTasksByStatusAsync(Guid projectId)
+    public async Task<GetTitleResponse> GetInfoColumnAsync(Guid projectId)
     {
-        try
-        {
-            var response = await _httpClient.GetAsync($"api/v1/tasks/projects/{projectId}/");
-            response.EnsureSuccessStatusCode();
+        var response = await _httpClient.GetAsync($"api/v1/boards/projects/{projectId}/");
+        response.EnsureSuccessStatusCode();
+        
+        var content = await response.Content.ReadAsStringAsync();
+        var apiResponse = await response.Content.ReadFromJsonAsync<Response<GetTitleResponse>>();
 
-            var content = await response.Content.ReadAsStringAsync();
-            _logger.LogInformation("API Response: {Content}", content);
-
-            // Десериализуем с учетом обертки Response<>
-            var apiResponse = await response.Content.ReadFromJsonAsync<Response<IReadOnlyList<TaskDto>>>();
-            return apiResponse?.Data ?? new List<TaskDto>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error loading tasks");
-            return new List<TaskDto>();
-        }
+        return apiResponse?.Data ?? null;
     }
-    public async Task<CreateTaskResponse> AddTaskAsync(
-        CreateTaskRequest request,
-        CancellationToken cancellationToken = default)
+
+    public async Task<List<TaskDto>> GetTasksAsync(Guid projectId)
+    {
+        var response = await _httpClient.GetAsync($"api/v1/boards/projects/{projectId}/");
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var apiResponse = await response.Content.ReadFromJsonAsync<Response<GetTaskResponse>>();
+
+        return apiResponse?.Data.Tasks ?? null;
+    }
+
+    public async Task<Guid?> AddColumnAsync(CreateColumnRequest request)
     {
         var response = await _httpClient.PostAsJsonAsync(
-            "api/v1/tasks",
-            request,
-            cancellationToken);
+            $"api/v1/boards",
+            request);
 
         response.EnsureSuccessStatusCode();
 
-        var apiResponse = await response.Content.ReadFromJsonAsync<Response<CreateTaskResponse>>(cancellationToken);
-        return apiResponse?.Data ?? throw new InvalidOperationException("Invalid API response");
+        var content = await response.Content.ReadAsStringAsync();
+        var apiResponse = await response.Content.ReadFromJsonAsync<Response<CreateColumnResponse>>();
+
+        return apiResponse?.Data.ColumnId;
     }
 
-    public async Task<UpdateColumnTaskResponse> UpdateTaskStatusAsync(
-        Guid taskId,
-        CancellationToken cancellationToken = default)
-    {
-        var response = await _httpClient.PatchAsJsonAsync(
-            $"api/v1/tasks/{taskId}/status",
-            cancellationToken);
+    //public async Task<CreateTaskResponse> AddTaskAsync(
+    //    CreateTaskRequest request,
+    //    CancellationToken cancellationToken = default)
+    //{
+    //    var response = await _httpClient.PostAsJsonAsync(
+    //        "api/v1/tasks",
+    //        request,
+    //        cancellationToken);
 
-        response.EnsureSuccessStatusCode();
+    //    response.EnsureSuccessStatusCode();
 
-        var apiResponse = await response.Content.ReadFromJsonAsync<Response<UpdateColumnTaskResponse>>(cancellationToken);
-        return apiResponse?.Data ?? throw new InvalidOperationException("Invalid API response");
-    }
+    //    var apiResponse = await response.Content.ReadFromJsonAsync<Response<CreateTaskResponse>>(cancellationToken);
+    //    return apiResponse?.Data ?? throw new InvalidOperationException("Invalid API response");
+    //}
+
+    //public async Task<UpdateColumnTaskResponse> UpdateTaskStatusAsync(
+    //    Guid taskId,
+    //    CancellationToken cancellationToken = default)
+    //{
+    //    var response = await _httpClient.PatchAsJsonAsync(
+    //        $"api/v1/tasks/{taskId}/status",
+    //        cancellationToken);
+
+    //    response.EnsureSuccessStatusCode();
+
+    //    var apiResponse = await response.Content.ReadFromJsonAsync<Response<UpdateColumnTaskResponse>>(cancellationToken);
+    //    return apiResponse?.Data ?? throw new InvalidOperationException("Invalid API response");
+    //}
 }

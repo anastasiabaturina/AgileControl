@@ -18,4 +18,8 @@
     <Folder Include="Features\Requests\Users\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AgileControl.Domain\AgileControl.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

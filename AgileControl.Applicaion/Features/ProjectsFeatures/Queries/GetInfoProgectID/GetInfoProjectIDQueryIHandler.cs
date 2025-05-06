@@ -20,7 +20,7 @@ public class GetInfoProjectIDQueryIHandler : IRequestHandler<GetInfoProjectIDQue
     {
         var project = await _context.Projects
     .Include(p => p.CreatorUser)
-    .Include(p => p.ProgectMembers)
+    .Include(p => p.ProjectMembers)
         .ThenInclude(pm => pm.User)
     .FirstOrDefaultAsync(p => p.Id == query.ProjectId, cancellationToken);
 
@@ -42,7 +42,7 @@ public class GetInfoProjectIDQueryIHandler : IRequestHandler<GetInfoProjectIDQue
                 UserName = project.CreatorUser.UserName,
                 Email = project.CreatorUser.Email
             },
-            ProjectMembers = project.ProgectMembers.Select(pm => new ProjectMemberDtoResponse
+            ProjectMembers = project.ProjectMembers.Select(pm => new ProjectMemberDtoResponse
             {
                 UserId = pm.User.Id,
                 UserName = pm.User.UserName,

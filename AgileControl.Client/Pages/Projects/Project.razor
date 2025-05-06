@@ -108,7 +108,8 @@
 </MudContainer>
 
 @code {
-    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] 
+    public Guid ProjectId { get; set; }
     private GetInfoGueryIDResponse? _project;
     private bool _isLoading = true;
 

@@ -33,7 +33,5 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
             entity.Ignore(u => u.UserName);  
             entity.Property(u => u.Email).IsRequired(); 
         });
-
-
     }
 }

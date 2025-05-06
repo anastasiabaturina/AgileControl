@@ -5,23 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgileControl.Applicaion.Features.TasksFeatures.Queries.Status;
 
-public class GetTaskByColumnHandler : IRequestHandler<GetTasksByStatusQuery, GetTaskByColumnResponse>
+public class GetTaskHandler : IRequestHandler<GetTasksQuery, GetTaskResponse>
 {
     private readonly ApplicationDbContext _context;
 
-    public GetTaskByColumnHandler(ApplicationDbContext context)
+    public GetTaskHandler(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task<GetTaskByColumnResponse> Handle(GetTasksByStatusQuery query, CancellationToken cancellationToken)
+    public async Task<GetTaskResponse> Handle(GetTasksQuery query, CancellationToken cancellationToken)
     {
         var tasks = await _context.ProjectTasks
-            .Where(t => t.ProjectId == query.ProjectId && t.KanbanColumnId == query.Columnid)
+            .Where(t => t.ProjectId == query.ProjectId)
             .Include(t => t.Assignee)
-            .Include(t => t.UserCreated)
-            .Include(t => t.CheckList)
-            .Select(t => new TaskDto
+            .Include(t => t.UserCreated) 
+            .Select(t => new TaskDto (t.Title, t.KanbanColumnId)
             {
                 Id = t.Id,
                 Title = t.Title,
@@ -41,16 +40,11 @@ public class GetTaskByColumnHandler : IRequestHandler<GetTasksByStatusQuery, Get
                     Email = t.Assignee.Email
                 } : null,
                 Priority = t.Priority,
-                CheckList = t.CheckList.Select(cl => new CheckListDto
-                {
-                    Id = cl.Id,
-                    Text = cl.Text,
-                    IsCompleted = cl.IsCompleted,
-                }).ToList()
+                ColumnId = t.KanbanColumnId
             })
             .ToListAsync(cancellationToken);
 
-        return new GetTaskByColumnResponse
+        return new GetTaskResponse
         {
             Tasks = tasks
         };

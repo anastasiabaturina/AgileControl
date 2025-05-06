@@ -1,4 +1,6 @@
-﻿namespace AgileControl.Shared.Features.Requests.Tasks;
+﻿using AgileControl.Domain.Enums;
+
+namespace AgileControl.Shared.Features.Requests.Tasks;
 
 public class CreateTaskRequest
 {
@@ -14,5 +16,5 @@ public class CreateTaskRequest
 
     public Priority Priority { get; set; }
 
-    public Guid ColumnId { get; set; }
+    public Guid? ColumnId { get; set; }
 }

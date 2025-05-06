@@ -4,7 +4,7 @@ using System;
 
 namespace AgileControl.Applicaion.Features.TasksFeatures.Queries.Status;
 
-public class GetTasksByStatusQuery : IRequest<GetTaskByColumnResponse>
+public class GetTasksQuery : IRequest<GetTaskResponse>
 {
     public Guid ProjectId { get; set; }
 

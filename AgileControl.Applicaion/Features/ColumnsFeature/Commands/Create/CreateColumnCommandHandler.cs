@@ -17,6 +17,7 @@ public class CreateColumnCommandHandler : IRequestHandler<CreateColumnCommand, C
         var column = new KanbanColumn
         {
             Title = command.Title,
+            ProjectId = command.ProjectId,
         };
 
         _context.Columns.Add(column);
