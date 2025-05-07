@@ -1,8 +1,5 @@
 ﻿using AgileControl.Applicaion.Features.Column.Queiries.GetTitle;
-using AgileControl.Applicaion.Features.TasksFeatures.Commands.Create;
-using AgileControl.Applicaion.Features.TasksFeatures.Commands.UpdateStatus;
 using AgileControl.Applicaion.Models.Dtos;
-using AgileControl.Domain.Enums;
 using AgileControl.Shared.Features.Requests.Columns;
 using AgileControl.Shared.Features.Requests.Tasks;
 

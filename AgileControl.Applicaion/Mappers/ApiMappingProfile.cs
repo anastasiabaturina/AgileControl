@@ -41,14 +41,16 @@ public class ApiMappingProfile : Profile
             .ForMember(dest => dest.ProjectRole, opt => opt.MapFrom(src => src.ProjectRole));
 
         CreateMap<CreateProjectCommand, Project>()
-           .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-           .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.CreaterId))
-           .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src =>
-                src.EndDate.HasValue
-                    ? DateTime.SpecifyKind(src.EndDate.Value, DateTimeKind.Utc)
-                    : (DateTime?)null))
-           .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-           .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+    .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.CreaterId)) // Исправляем опечатку
+    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+    .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+    .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src =>
+        src.EndDate.HasValue
+            ? DateTime.SpecifyKind(src.EndDate.Value, DateTimeKind.Utc)
+            : (DateTime?)null))
+    .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(_ => DateTime.UtcNow))
+    .ForMember(dest => dest.CreatorUser, opt => opt.Ignore()) // Игнорируем, будет заполнено отдельно
+    .ForMember(dest => dest.ProjectMembers, opt => opt.Ignore()); // Игнорируем, т.к. разные типы
 
         CreateMap<Guid, GetInfoProjectIDQuery>()
             .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src));

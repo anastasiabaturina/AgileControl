@@ -1,5 +1,6 @@
 ﻿using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.UsersFeatures.Queries.Search;
+using AgileControl.Applicaion.Features.UsersFeatures.Queries.SearchByProject;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +30,26 @@ public class UserController : ControllerBase
         var result = await _mediator.Send(query);
 
         var response = new Response<SearchUserByNameResponse>
+        {
+            Data = result,
+        };
+
+        return Ok(response);
+    }
+
+    [HttpGet("project/search")]
+    public async Task<IActionResult> SearchByNameByProjectAsync([FromQuery] Guid projectid,[FromQuery] string name, [FromQuery] int limit)
+    {
+        var query = new SearchByProjectQuery
+        {
+            SearchName = name,
+            Limit = limit,
+            ProjectId = projectid
+        };
+
+        var result = await _mediator.Send(query);
+
+        var response = new Response<SearchByProjectResponse>
         {
             Data = result,
         };

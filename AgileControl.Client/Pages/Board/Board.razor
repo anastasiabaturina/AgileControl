@@ -10,6 +10,7 @@
 @using System.ComponentModel.DataAnnotations
 @using MudBlazor
 @inject ITaskService TaskService
+@inject IUserService UserService
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 
@@ -18,7 +19,7 @@
 
         @foreach (var item in _sections)
         {
-            <MudPaper Elevation="0" Width="224px" MinHeight="400px" Class="pa-4 ma-4 d-flex flex-column mud-background-gray rounded-lg">
+            <MudPaper Elevation="0" Width="400px" MinHeight="700px" Class="pa-4 ma-4 d-flex flex-column mud-background-gray rounded-lg">
                 <MudToolBar Gutters="false">
                     <MudText Typo="Typo.subtitle1"><b>@item.Name</b></MudText>
                     <MudSpacer />
@@ -31,21 +32,21 @@
                 @if (item.NewTaskOpen)
                 {
                     <MudPaper Elevation="25" Class="pa-2 rounded-lg">
-                        <EditForm Model="@newTaskModel" OnValidSubmit="@(() => AddTask(item))">
+                        <EditForm Model="@newTaskModel" OnValidSubmit="@(() => AddTask(item, SelectedUserAssignee))">
                             <DataAnnotationsValidator />
                             <MudTextField @bind-Value="newTaskModel.Title"
-                            Label="Task Title"
+                            Label="Название"
                             Required="true"
-                            RequiredError="Title is required"
+                            RequiredError="Название обязательно"
                             Class="mb-2" />
 
                             <MudTextField @bind-Value="newTaskModel.Description"
-                            Label="Description"
+                            Label="Описание"
                             Lines="3"
                             Class="mb-2" />
 
                             <MudSelect @bind-Value="newTaskModel.Priority"
-                            Label="Priority"
+                            Label="Приоритет"
                             Class="mb-2">
                                 <MudSelectItem Value="@Priority.No">No Priority</MudSelectItem>
                                 <MudSelectItem Value="@Priority.Low">Low</MudSelectItem>
@@ -54,31 +55,50 @@
                             </MudSelect>
 
                             <MudDatePicker @bind-Value="newTaskModel.EndDate"
-                            Label="Due Date"
+                            Label="Дата завершения"
                             Class="mb-2" />
+
+                            <MudAutocomplete T="UserDto" 
+                            Label="Добавить ответсвенного"
+                            SearchFunc="SearchUsers"
+                            ToStringFunc="@(u => u?.UserName ?? string.Empty)"
+                            DebounceInterval="300"
+                            MinCharacters="2"
+                            Clearable="true"
+                            ResetValueOnEmptyText="true"
+                            ValueChanged="OnUserSelected">
+                                <ItemTemplate Context="user">
+                                    <div style="padding: 5px">
+                                        <MudText>@user.UserName</MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">@user.Email</MudText>     
+                                    </div>
+                                </ItemTemplate>
+                            </MudAutocomplete>
 
                             <div class="d-flex" style="gap: 8px;">
                                 <MudButton ButtonType="ButtonType.Submit"
                                 Variant="Variant.Filled"
                                 Color="Color.Primary">
-                                    Add Task
+                                    Добавить задачу
                                 </MudButton>
                                 <MudButton OnClick="@(() => item.NewTaskOpen = false)"
                                 Variant="Variant.Text"
                                 Color="Color.Error">
-                                    Cancel
+                                    Закрыть
                                 </MudButton>
                             </div>
+
+
                         </EditForm>
                     </MudPaper>
                 }
                 else
                 {
-                    <MudButton OnClick="@(() => { item.NewTaskOpen = true; newTaskModel = new TaskDto(); })"
+                    <MudButton OnClick="@(() => { item.NewTaskOpen = true; newTaskModel = new TaskDto(string.Empty, null); })"
                     StartIcon="@Icons.Material.Filled.Add"
                     FullWidth="true"
                     Class="rounded-lg py-2">
-                        Add Task
+                        Добавить задачу
                     </MudButton>
                 }
 
@@ -101,88 +121,107 @@
             }
         </MudPaper>
     </ChildContent>
+
     <ItemRenderer>
-        <MudPaper Elevation="5" Class="pa-4 rounded-lg my-3 d-flex flex-column" Style="gap: 8px;">
-            <!-- Заголовок и приоритет -->
-            <div class="d-flex align-center justify-space-between">
-                <MudText Typo="Typo.subtitle1" Style="font-weight: 500;">@context.Title</MudText>
+    <MudPaper Elevation="5" Class="pa-4 rounded-lg my-3" Style="overflow: hidden;">
+        <!-- Основная компактная информация -->
+        <div class="d-flex align-center justify-space-between" style="gap: 8px;">
+            <!-- Заголовок (с ограничением ширины) -->
+            <MudText Typo="Typo.subtitle1" 
+                    Style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">
+                @context.Title
+            </MudText>
+            
+            <!-- Приоритет -->
+                @{
+                    int fireCount = context.Priority switch
+                    {
+                        Domain.Enums.Priority.High => 3,
+                        Domain.Enums.Priority.Average => 2,
+                        Domain.Enums.Priority.Low => 1,
+                        Domain.Enums.Priority.No => 0,
+                        _ => 0
+                    };
 
-                <!-- Индикатор приоритета -->
-                @switch (context.Priority)
-                {
-                    case Domain.Enums.Priority.High:
-                        <MudChip T="string" Variant="Variant.Filled" Color="Color.Error" Class="ml-2" Icon="@Icons.Material.Filled.PriorityHigh">
-                            High
-                        </MudChip>
-                        break;
-                    case Domain.Enums.Priority.Average:
-                        <MudChip T="string" Variant="Variant.Filled" Color="Color.Warning" Class="ml-2" Icon="@Icons.Material.Filled.LinearScale">
-                            Average
-                        </MudChip>
-                        break;
-                    case Domain.Enums.Priority.Low:
-                        <MudChip T="string" Variant="Variant.Filled" Color="Color.Info" Class="ml-2" Icon="@Icons.Material.Filled.LowPriority">
-                            Low
-                        </MudChip>
-                        break;
-                    case Domain.Enums.Priority.No:
-                        <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default" Class="ml-2">
-                            No priority
-                        </MudChip>
-                        break;
+                    Color chipColor = context.Priority switch
+                    {
+                        Domain.Enums.Priority.High => Color.Error,
+                        Domain.Enums.Priority.Average => Color.Warning,
+                        Domain.Enums.Priority.Low => Color.Info,
+                        _ => Color.Default
+                    };
+
+                    string tooltipText = context.Priority switch
+                    {
+                        Domain.Enums.Priority.High => "High priority",
+                        Domain.Enums.Priority.Average => "Average priority",
+                        Domain.Enums.Priority.Low => "Low priority",
+                        Domain.Enums.Priority.No => "No priority",
+                        _ => "Unknown"
+                    };
                 }
-            </div>
 
-            <!-- Описание (если есть) -->
-            @if (!string.IsNullOrEmpty(context.Description))
-            {
-                <MudText Typo="Typo.body2" Class="my-1">@context.Description</MudText>
-            }
+                <MudTooltip Text="@tooltipText">
+                    <MudChip T="string" Variant="Variant.Filled" Color="@chipColor" Class="ml-2">
+                        @if (fireCount > 0)
+                        {
+                            @for (int i = 0; i < fireCount; i++)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Whatshot" Class="mx-0.5" />
+                            }
+                        }
+                        else
+                        {
+                            <MudText Class="ml-1" Typo="Typo.caption">No priority</MudText>
+                        }
+                    </MudChip>
+                </MudTooltip>
+        </div>
 
-            <!-- Даты -->
-            <div class="d-flex" style="gap: 12px;">
-                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" Icon="@Icons.Material.Filled.CalendarToday">
-                    @context.CreatedDate.ToString("dd.MM.yyyy")
-                    <TooltipContent>
-                        Created: @context.CreatedDate.ToString("g")
-                    </TooltipContent>
-                </MudChip>
-                }
-            </div>
+        <!-- Раскрывающиеся детали -->
+        <MudExpansionPanels Style="margin-top: 8px;">
+            <MudExpansionPanel>
+                <ChildContent>
+                    <div style="padding: 8px 0;">
+                        <!-- Описание -->
+                        @if (!string.IsNullOrEmpty(context.Description))
+                        {
+                            <MudText Typo="Typo.body2" Class="my-2" Style="word-break: break-word;">
+                                @context.Description
+                            </MudText>
+                        }
 
-            <!-- Ответственный и автор -->
-            <div class="d-flex" style="gap: 8px; margin-top: 4px;">
-                @if (context.Assignee != null)
-                {
-                    <MudAvatar Size="Size.Small" Color="Color.Primary" Style="width:24px; height:24px;">
-                        <Initials>@GetInitials(context.Assignee.UserName)</Initials>
-                        <TooltipContent>
-                            Ответственный: @context.Assignee.UserName
-                        </TooltipContent>
-                    </MudAvatar>
-                }
-                @if (context.UserCreated != null)
-                {
-                    <MudAvatar Size="Size.Small" Color="Color.Secondary" Style="width:24px; height:24px;">
-                        <Initials>@GetInitials(context.UserCreated.UserName)</Initials>
-                        <TooltipContent>
-                            Автор: @context.UserCreated.UserName
-                        </TooltipContent>
-                    </MudAvatar>
-                }
-            </div>
-        </MudPaper>
-    </ItemRenderer>
+                        <!-- Даты -->
+                        <div class="d-flex" style="gap: 12px; margin-top: 8px;">
+                            <MudTooltip Text="@($"Created: {context.CreatedDate.ToString("g")}")">
+                                <ChildContent>
+                                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default" 
+                                            Size="Size.Small" Icon="@Icons.Material.Filled.CalendarToday">
+                                        @context.CreatedDate.ToString("dd.MM.yyyy")
+                                    </MudChip>
+                                </ChildContent>
+                            </MudTooltip>
+                        </div>
 
-    @code {
-    private string GetInitials(string userName)
-    {
-        if (string.IsNullOrEmpty(userName)) return "?";
-        var parts = userName.Split(' ');
-        if (parts.Length == 1) return parts[0][0].ToString();
-        return $"{parts[0][0]}{parts[^1][0]}";
-    }
-}
+                        <!-- Ответственный -->
+                        @if (context.Assignee != null)
+                        {
+                                <!-- Ответственный -->
+                                <div class="d-flex" style="gap: 8px; margin-top: 4px;">
+                                    @if (context.Assignee != null)
+                                    {
+                                        <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default" Class="ml-2">
+                                            Ответственный: @context.Assignee.UserName
+                                        </MudChip>
+                                    }
+                                </div>
+                        }
+                    </div>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </MudPaper>
+</ItemRenderer>
 </MudDropContainer>
 @code {
     [Parameter] 
@@ -191,9 +230,9 @@
 
     private MudDropContainer<TaskDto> _dropContainer;
 
-    private TaskDto newTaskModel = new TaskDto(
-        title: string.Empty,
-        columnId: Guid.Empty);
+    private TaskDto newTaskModel = new TaskDto(string.Empty, null);
+
+    private UserDto? SelectedUserAssignee;
 
     private bool _addSectionOpen;
 
@@ -236,12 +275,14 @@
                 ))
                 .ToList();
 
-            _tasks = await TaskService.GetTasksAsync(ProjectId);
+            var tasksResponse = await TaskService.GetTasksAsync(ProjectId);
 
-            if (_tasks == null)
+            if (tasksResponse == null || tasksResponse.Count == 0)
             {
                 return;
             }
+
+            _tasks = tasksResponse;
         }
         catch (Exception ex)
         {
@@ -300,7 +341,7 @@
         _addSectionOpen = true;
     }
 
-    private async Task AddTask(KanBanSections section)
+    private async Task AddTask(KanBanSections section, UserDto assignee)
     {
         newTaskModel.ColumnId = section.ColumnId;
         newTaskModel.CreatedDate = DateTime.Now;
@@ -312,7 +353,8 @@
                 Priority = newTaskModel.Priority,
                 EndDate = newTaskModel.EndDate,
                 ColumnId = newTaskModel.ColumnId,
-                ProjectId = ProjectId
+                ProjectId = ProjectId,
+                AssigneeId = assignee.Id
             });
 
         _tasks.Add(new TaskDto(
@@ -323,16 +365,38 @@
                 Priority = newTaskModel.Priority,
                 EndDate = newTaskModel.EndDate,
                 CreatedDate = newTaskModel.CreatedDate,
-                Id = createdTask 
+                Id = createdTask,
+                Assignee = assignee          
             });
 
-        // Сбрасываем форму
-
-        newTaskModel = new TaskDto(title: string.Empty,
-         columnId: Guid.Empty);
+        newTaskModel = new TaskDto(string.Empty, null);
         section.NewTaskName = string.Empty;
         section.NewTaskOpen = false;
         _dropContainer.Refresh();
+    }
+
+    private async Task<IEnumerable<UserDto>> SearchUsers(string searchText, CancellationToken token)
+    {
+        try
+        {
+            var response = await UserService.SearchByNameUserByProject(searchText, 10, ProjectId);
+            return response.Users;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ошибка поиска: {ex.Message}", Severity.Error);
+            return Enumerable.Empty<UserDto>();
+        }
+    }
+
+    private async Task OnUserSelected(UserDto user)
+    {
+        SelectedUserAssignee = user;
+
+        if (user == null)
+            return;
+
+        StateHasChanged();
     }
 
     private void DeleteSection(KanBanSections section)

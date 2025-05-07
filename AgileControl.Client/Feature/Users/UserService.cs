@@ -1,5 +1,6 @@
 ﻿using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.UsersFeatures.Queries.Search;
+using AgileControl.Applicaion.Features.UsersFeatures.Queries.SearchByProject;
 using AgileControl.Client.Interfaces;
 using Blazored.LocalStorage;
 using System.Net.Http.Headers;
@@ -33,6 +34,28 @@ public class UserService : IUserService
         {
             return null;
         }
+    }
+
+    public async Task<SearchByProjectResponse> SearchByNameUserByProject(string name, int? limit, Guid projectId)
+    {
+
+            await AddAuthHeader();
+
+            // Безопасное формирование URL с параметрами
+            var queryParams = new Dictionary<string, string>
+            {
+                ["name"] = name,
+                ["limit"] = limit?.ToString() ?? string.Empty
+            };
+
+            var queryString = new FormUrlEncodedContent(queryParams)
+                .ReadAsStringAsync()
+                .Result;
+
+        var response = await _httpClient.GetFromJsonAsync<Response<SearchByProjectResponse>>(
+             $"api/v1/users/project/search?projectid={projectId}&name={name}&limit={limit}");
+        
+        return response?.Data;
     }
 
     private async Task AddAuthHeader()

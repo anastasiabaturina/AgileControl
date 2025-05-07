@@ -33,6 +33,23 @@
                        Variant="Variant.Outlined"
                        Class="mb-6" />
 
+        <MudAutocomplete T="UserDto"
+                         Label="Добавить участника"
+                         SearchFunc="SearchUsers"
+                         ToStringFunc="@(u => u?.UserName ?? string.Empty)"
+                         DebounceInterval="300"
+                         MinCharacters="2"
+                         Clearable="true"
+                         ResetValueOnEmptyText="true"
+                         ValueChanged="OnUserSelected">
+            <ItemTemplate Context="user">
+                <div style="padding: 5px">
+                    <MudText>@user.UserName</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">@user.Email</MudText>
+                </div>
+            </ItemTemplate>
+        </MudAutocomplete>
+
         <div class="d-flex justify-end" style="gap: 16px;">
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
@@ -44,22 +61,7 @@
 
         <MudText Typo="Typo.h6" Class="mt-6 mb-2">Участники проекта</MudText>
 
-<MudAutocomplete T="UserDto"
-                 Label="Добавить участника"
-                 SearchFunc="SearchUsers"
-                 ToStringFunc="@(u => u?.UserName ?? string.Empty)"
-                 DebounceInterval="300"
-                 MinCharacters="2"
-                 Clearable="true"
-                 ResetValueOnEmptyText="true"
-                 ValueChanged="OnUserSelected">
-    <ItemTemplate Context="user">
-        <div style="padding: 5px">
-            <MudText>@user.UserName</MudText>
-            <MudText Typo="Typo.caption" Color="Color.Secondary">@user.Email</MudText>
-        </div>
-    </ItemTemplate>
-</MudAutocomplete>
+
 
         <MudList T="ProjectMemberRequest" Dense="true" Class="mt-2">
             @foreach (var member in _projectRequest.ProjectMembers)

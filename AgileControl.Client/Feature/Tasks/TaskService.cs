@@ -1,10 +1,12 @@
 ﻿using AgileControl.API.Models.Responses;
 using AgileControl.Applicaion.Features.Column.Queiries.GetTitle;
 using AgileControl.Applicaion.Features.Kanban.Commands.Create;
+using AgileControl.Applicaion.Features.TasksFeatures.Commands.Create;
 using AgileControl.Applicaion.Features.TasksFeatures.Queries.Status;
 using AgileControl.Applicaion.Models.Dtos;
 using AgileControl.Client.Interfaces;
 using AgileControl.Shared.Features.Requests.Columns;
+using AgileControl.Shared.Features.Requests.Tasks;
 using System.Net.Http.Json;
 
 namespace AgileControl.Client.Feature.Tasks;
@@ -31,7 +33,7 @@ public class TaskService : ITaskService
 
     public async Task<List<TaskDto>> GetTasksAsync(Guid projectId)
     {
-        var response = await _httpClient.GetAsync($"api/v1/boards/projects/{projectId}/");
+        var response = await _httpClient.GetAsync($"api/v1/tasks/projects/{projectId}/");
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
@@ -52,6 +54,20 @@ public class TaskService : ITaskService
         var apiResponse = await response.Content.ReadFromJsonAsync<Response<CreateColumnResponse>>();
 
         return apiResponse?.Data.ColumnId;
+    }
+
+    public async Task<Guid> CreateTaskAsync(CreateTaskRequest request)
+    {
+        var response = await _httpClient.PostAsJsonAsync(
+            $"api/v1/tasks",
+            request);
+
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var apiResponse = await response.Content.ReadFromJsonAsync<Response<CreateTaskResponse>>();
+
+        return apiResponse.Data.TaskId;
     }
 
     //public async Task<CreateTaskResponse> AddTaskAsync(
